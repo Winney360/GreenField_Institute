@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My courses · Greenfield Institute</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+    <header class="navbar">
+        <h1>Greenfield Institute</h1>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="courses.html">Browse courses</a>
+            <a href="my-courses.html" class="active">My courses</a>
+            <a href="api/logout.php">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>My registrations</h2>
+        <div id="msg"></div>
+        <div id="grid" class="course-grid"></div>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        async function load() {
+            const res = await api.get('api/my_courses.php');
+            const grid = document.getElementById('grid');
+            if (!res.ok) { flash('msg', res.error || 'Failed to load.', 'error'); return; }
+            const active = res.registrations.filter(r => r.status === 'active');
+            if (!active.length) {
+                grid.innerHTML = `
+                    <p style="color:var(--grey-700)">
+                        You have not registered for any courses yet.
+                        <a href="courses.html">Browse the catalogue</a> to get started.
+                    </p>`;
+                return;
+            }
+            grid.innerHTML = active.map(r => `
+                <article class="course-card">
+                    <div class="code">${escapeHtml(r.course_code)} · ${escapeHtml(r.department)}</div>
+                    <h3>${escapeHtml(r.title)}</h3>
+                    <div class="meta">
+                        <span>${escapeHtml(r.instructor)}</span>
+                        <span>${r.credits} credits</span>
+                        <span>Registered ${new Date(r.registered_at).toLocaleDateString()}</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-danger" data-id="${r.course_id}">Drop course</button>
+                    </div>
+                </article>
+            `).join('');
+
+            grid.querySelectorAll('button[data-id]').forEach(b =>
+                b.addEventListener('click', () => drop(b.dataset.id))
+            );
+        }
+
+        async function drop(courseId) {
+            if (!confirm('Drop this course?')) return;
+            const res = await api.post('api/drop.php', { course_id: Number(courseId) });
+            if (res.ok) { flash('msg', 'Course dropped.', 'success'); load(); }
+            else        { flash('msg', res.error || 'Drop failed.', 'error'); }
+        }
+
+        load();
+    </script>
+</body>
+</html>

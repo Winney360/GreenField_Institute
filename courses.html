@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Courses · Greenfield Institute</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+    <header class="navbar">
+        <h1>Greenfield Institute</h1>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="courses.html" class="active">Browse courses</a>
+            <a href="my-courses.html">My courses</a>
+            <a href="api/logout.php">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Course catalogue</h2>
+
+        <div class="toolbar">
+            <input type="search" id="search"     placeholder="Search by code, title or keyword…" />
+            <select id="department">
+                <option value="">All departments</option>
+            </select>
+        </div>
+
+        <div id="msg"></div>
+        <div id="grid" class="course-grid"></div>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        const grid = document.getElementById('grid');
+        const search = document.getElementById('search');
+        const dept   = document.getElementById('department');
+
+        // Debounced AJAX search — fires the server filter as the user types.
+        let timer;
+        const refresh = () => {
+            clearTimeout(timer);
+            timer = setTimeout(load, 200);
+        };
+        search.addEventListener('input', refresh);
+        dept.addEventListener('change', refresh);
+
+        async function load() {
+            const params = new URLSearchParams();
+            if (search.value.trim()) params.set('q', search.value.trim());
+            if (dept.value)          params.set('department', dept.value);
+
+            const res = await api.get('api/courses.php?' + params.toString());
+            if (!res.ok) { flash('msg', res.error || 'Failed to load courses.', 'error'); return; }
+            render(res.courses);
+        }
+
+        function render(courses) {
+            if (!courses.length) {
+                grid.innerHTML = '<p style="color:var(--grey-700)">No courses match your filters.</p>';
+                return;
+            }
+
+            // Populate the department dropdown the first time only.
+            if (dept.options.length === 1) {
+                const set = new Set(courses.map(c => c.department));
+                set.forEach(d => {
+                    const o = document.createElement('option'); o.value = d; o.textContent = d;
+                    dept.appendChild(o);
+                });
+            }
+
+            grid.innerHTML = courses.map(c => `
+                <article class="course-card">
+                    <div class="code">${escapeHtml(c.course_code)} · ${escapeHtml(c.department)}</div>
+                    <h3>${escapeHtml(c.title)}
+                        ${c.is_full ? '<span class="badge full">Full</span>'
+                                    : `<span class="badge">${c.available_seats} seats</span>`}
+                    </h3>
+                    <p>${escapeHtml(c.description || '')}</p>
+                    <div class="meta">
+                        <span>${escapeHtml(c.instructor)}</span>
+                        <span>${c.credits} credits</span>
+                        <span>${c.enrolled}/${c.capacity} enrolled</span>
+                    </div>
+                    <div class="actions">
+                        <button data-id="${c.course_id}" ${c.is_full ? 'disabled' : ''}>
+                            ${c.is_full ? 'Full' : 'Register'}
+                        </button>
+                    </div>
+                </article>
+            `).join('');
+
+            grid.querySelectorAll('button[data-id]').forEach(b => {
+                b.addEventListener('click', () => enroll(b.dataset.id, b));
+            });
+        }
+
+        async function enroll(courseId, btn) {
+            btn.disabled = true; btn.textContent = 'Registering…';
+            const res = await api.post('api/enroll.php', { course_id: Number(courseId) });
+            if (res.ok) {
+                flash('msg', 'Successfully registered for the course.', 'success');
+                load();
+            } else {
+                flash('msg', res.error || 'Registration failed.', 'error');
+                btn.disabled = false; btn.textContent = 'Register';
+            }
+        }
+
+        load();
+    </script>
+</body>
+</html>

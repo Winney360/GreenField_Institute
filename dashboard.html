@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard · Greenfield Institute</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+    <header class="navbar">
+        <h1>Greenfield Institute</h1>
+        <nav>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="courses.html">Browse courses</a>
+            <a href="my-courses.html">My courses</a>
+            <a href="api/logout.php">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Welcome, <span id="userName">student</span></h2>
+        <p style="color:var(--grey-700);">
+            From here you can browse the course catalogue, enroll in new courses,
+            or review the courses you are already registered in.
+        </p>
+
+        <div class="course-grid" style="margin-top:1.25rem;">
+            <div class="course-card">
+                <h3>Browse all available courses</h3>
+                <p>See every course on offer this semester, search by keyword and filter by department.</p>
+                <a class="btn" href="courses.html">Open catalogue</a>
+            </div>
+            <div class="course-card">
+                <h3>My registrations</h3>
+                <p>View your current enrollments, drop a course, and check registration history.</p>
+                <a class="btn" href="my-courses.html">View my courses</a>
+            </div>
+            <div class="course-card">
+                <h3>Course catalogue (XML)</h3>
+                <p>The same catalogue exposed as XML for programmatic access.</p>
+                <a class="btn btn-secondary" href="api/courses_xml.php" target="_blank">Open XML feed</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        (async () => {
+            const me = await api.get('api/me.php');
+            if (me.ok) {
+                document.getElementById('userName').textContent = me.user.full_name;
+                if (me.user.role === 'admin') {
+                    window.location.href = 'admin/dashboard.php';
+                }
+            }
+        })();
+    </script>
+</body>
+</html>

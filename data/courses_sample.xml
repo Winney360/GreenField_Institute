@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Sample XML representation of course information.
+    The /api/import_xml.php endpoint can read a file in this format
+    and load the courses into the MySQL database in bulk.
+-->
+<courses institution="Greenfield Institute">
+    <course code="PH130">
+        <title>Physics for Engineers</title>
+        <description>Mechanics, thermodynamics, and waves with engineering applications.</description>
+        <instructor>Dr. S. Mutiso</instructor>
+        <department>Physics</department>
+        <credits>4</credits>
+        <capacity>55</capacity>
+    </course>
+    <course code="EN140">
+        <title>Academic Writing</title>
+        <description>Essay structure, research, citation, and effective communication.</description>
+        <instructor>Ms. C. Wairimu</instructor>
+        <department>Humanities</department>
+        <credits>2</credits>
+        <capacity>40</capacity>
+    </course>
+    <course code="DS260">
+        <title>Introduction to Data Science</title>
+        <description>Data wrangling, visualisation, and basic machine learning with Python.</description>
+        <instructor>Dr. T. Omondi</instructor>
+        <department>Computing</department>
+        <credits>3</credits>
+        <capacity>50</capacity>
+    </course>
+</courses>

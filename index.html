@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login · Greenfield Institute</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+    <div class="auth-wrap">
+        <h2>Greenfield Institute</h2>
+        <p style="margin-top:0;color:var(--grey-700);font-size:0.9rem;">
+            Sign in to manage your course registrations.
+        </p>
+
+        <div id="msg"></div>
+
+        <form id="loginForm" autocomplete="on" novalidate>
+            <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required />
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="8" />
+            </div>
+            <button type="submit" id="submitBtn">Sign in</button>
+        </form>
+
+        <p class="switch">
+            New here? <a href="signup.html">Create a student account</a>
+        </p>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        const form = document.getElementById('loginForm');
+        const btn  = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btn.disabled = true; btn.textContent = 'Signing in…';
+            const res = await api.post('api/login.php', {
+                email: form.email.value.trim(),
+                password: form.password.value
+            });
+            if (res.ok) {
+                window.location.href = res.redirect;
+            } else {
+                flash('msg', res.error || 'Login failed.', 'error');
+                btn.disabled = false; btn.textContent = 'Sign in';
+            }
+        });
+    </script>
+</body>
+</html>
