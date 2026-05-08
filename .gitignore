@@ -26,11 +26,12 @@ composer.lock
 .env
 .env.local
 
-# If you ever decide to keep DB credentials private, uncomment
-# the next line and create a public includes/config.example.php
-# instead:
-# includes/config.php
+# Real DB credentials live in includes/config.php — not tracked.
+# Use includes/config.example.php as the template; copy it to config.php
+# and fill in your own values.
+includes/config.php
 
 # XAMPP / runtime -----------------------------------------------
 *.tmp
 *.bak
+greenfield.zip

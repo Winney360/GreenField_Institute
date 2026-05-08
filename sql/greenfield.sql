@@ -1,9 +1,17 @@
 -- Greenfield Institute — Course Registration System
 -- Database schema for the data tier (MySQL)
-
-DROP DATABASE IF EXISTS greenfield_db;
-CREATE DATABASE greenfield_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE greenfield_db;
+--
+-- HOW TO IMPORT
+--   In phpMyAdmin:
+--     1. Click your database name in the LEFT SIDEBAR first so it's
+--        selected (e.g. greenfield_db on XAMPP, or
+--        if0_xxxxxxxx_greenfield on InfinityFree).
+--     2. Click the "Import" tab and choose this file.
+--     3. Click "Go".
+--
+--   On a fresh XAMPP install you'll need to create the empty
+--   database manually first (CREATE DATABASE greenfield_db; in the
+--   SQL tab, or use the Databases tab).
 
 -- ----------------------------------------------------------------------
 -- Users (students + administrators) — single table, role column
