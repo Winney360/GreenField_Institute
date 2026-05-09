@@ -179,7 +179,7 @@ body {
     font-size: clamp(2rem, 3.5vw, 2.6rem);
     line-height: 1.1;
     margin: 0 0 0.75rem;
-    color: var(--text);
+    color: var(--color-primary);
     font-weight: 800;
     letter-spacing: 0.5px;
 }
