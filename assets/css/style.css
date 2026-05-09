@@ -118,39 +118,34 @@ body {
     overflow: hidden;
 }
 
-/* Dark panel — full viewport, diagonal-clipped, holds the hero <img> as a child. */
+/* Dark panel — full viewport, diagonal-clipped, holds the hero <img> as a child.
+   Default clip-path (signup): dark slab on the LEFT.
+   .mode-login overrides it to mirror the diagonal to the right. */
 .auth-card__dark {
     position: absolute;
     inset: 0;
     clip-path: polygon(0 0, 62% 0, 44% 100%, 0 100%);
-    background: var(--slab-bg); /* fallback if the image is missing */
+    background: var(--slab-bg);
     overflow: hidden;
 }
-.auth-card--login .auth-card__dark {
-    /* mirror the diagonal to the right side */
+.mode-login .auth-card__dark {
     clip-path: polygon(38% 0, 100% 0, 100% 100%, 56% 100%);
 }
 
-/* Hero image inside the dark panel — fills the slab edge-to-edge from the top
-   diagonal corner out to the screen edge. The diagonal clip on the parent crops
-   the slanted side; object-fit: cover preserves the photo's aspect ratio while
-   filling the box (no distortion, just a small crop). */
+/* Hero image inside the dark panel. We position it via `left` only (never `right`)
+   so the animation keyframes can interpolate left+width smoothly. */
 .auth-card__hero {
     position: absolute;
     top: 0;
     height: 100vh;
-    width: 62vw;       /* same width as the visible diagonal slab at its widest */
+    width: 62vw;
     object-fit: cover;
     display: block;
     pointer-events: none;
+    left: 0;            /* default = signup layout (image hugs left edge) */
 }
-/* Signup: image spans x=0 → x=62vw (left half of viewport). */
-.auth-card--signup .auth-card__hero {
-    left: 0;
-}
-/* Login: image spans x=38vw → x=100vw (right half of viewport). */
-.auth-card--login .auth-card__hero {
-    right: 0;
+.mode-login .auth-card__hero {
+    left: 38vw;         /* login = image starts where the diagonal starts at top */
 }
 
 /* Form panel — sits on the opposite side of the diagonal. */
@@ -160,9 +155,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 0 8vw 0 0;
+    padding: 0 8vw 0 0; /* default = signup, form on the right */
 }
-.auth-card--login .auth-card__form {
+.mode-login .auth-card__form {
     justify-content: flex-start;
     padding: 0 0 0 8vw;
 }
@@ -170,6 +165,12 @@ body {
     width: 360px;
     max-width: 100%;
 }
+
+/* View visibility — only the active mode's content is shown. The other view
+   stays in the DOM (so its inputs keep their values) but is hidden. */
+.auth-view { display: none; }
+.mode-login  .auth-view--login  { display: block; }
+.mode-signup .auth-view--signup { display: block; }
 
 /* Welcome heading + intro text shown above the form on the white side. */
 .auth-welcome {
@@ -195,7 +196,7 @@ body {
 
 /* Signup heading sits slightly lower than login's — gives the longer form
    some breathing room from the top of the visible area. */
-.auth-card--signup .auth-welcome { margin-top: 2.5rem; }
+.mode-signup .auth-welcome { margin-top: 2.5rem; }
 
 /* Underline-style fields with right-aligned icon. */
 .auth-field {
@@ -292,6 +293,55 @@ body {
 
 .auth-card__msg { margin-top: 1rem; }
 .auth-card__msg .alert { font-size: 0.85rem; padding: 0.5rem 0.75rem; margin-bottom: 0; }
+
+/* --- Transition between login ↔ signup ----------------------
+   Three keyframes run in parallel for 900ms total. Continuous morph
+   (no plateau) and a smooth ease-in-out — feels less like a flash.
+   JS swaps the mode class at the 50% midpoint (450 ms) when the form
+   panel is fully off-screen, so the side/content swap is invisible. */
+
+/* shared smooth easing */
+:root { --auth-ease: cubic-bezier(0.65, 0, 0.35, 1); }
+
+/* --- LOGIN → SIGNUP --- */
+@keyframes dark-l2s {
+    0%   { clip-path: polygon(38% 0, 100% 0, 100% 100%, 56% 100%); }
+    50%  { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+    100% { clip-path: polygon(0 0, 62% 0, 44% 100%, 0 100%); }
+}
+@keyframes hero-l2s {
+    0%   { left: 38vw; width: 62vw; }
+    50%  { left: 0;    width: 100vw; }
+    100% { left: 0;    width: 62vw; }
+}
+
+/* --- SIGNUP → LOGIN --- */
+@keyframes dark-s2l {
+    0%   { clip-path: polygon(0 0, 62% 0, 44% 100%, 0 100%); }
+    50%  { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+    100% { clip-path: polygon(38% 0, 100% 0, 100% 100%, 56% 100%); }
+}
+@keyframes hero-s2l {
+    0%   { left: 0;    width: 62vw; }
+    50%  { left: 0;    width: 100vw; }
+    100% { left: 38vw; width: 62vw; }
+}
+
+/* --- Form swap — slides straight down, then straight back up.
+   At 50% (peak) the form is fully off-screen. */
+@keyframes form-swap {
+    0%   { transform: translateY(0);     opacity: 1; }
+    50%  { transform: translateY(110vh); opacity: 0; }
+    100% { transform: translateY(0);     opacity: 1; }
+}
+
+/* Apply the animations when JS adds .is-going-to-X to the body. */
+.is-going-to-signup .auth-card__dark { animation: dark-l2s 2500ms var(--auth-ease) both; }
+.is-going-to-signup .auth-card__hero { animation: hero-l2s 2500ms var(--auth-ease) both; }
+.is-going-to-login  .auth-card__dark { animation: dark-s2l 2500ms var(--auth-ease) both; }
+.is-going-to-login  .auth-card__hero { animation: hero-s2l 2500ms var(--auth-ease) both; }
+.is-going-to-signup .auth-card__form,
+.is-going-to-login  .auth-card__form { animation: form-swap 2500ms var(--auth-ease) both; }
 
 /* Floating light/dark toggle — sits in a corner of every page. */
 .theme-toggle {
