@@ -8,16 +8,18 @@
 </head>
 <body class="auth-page">
     <div class="auth-card auth-card--signup">
-        <!-- Dark welcome panel (left side on signup) -->
+        <!-- Hero image panel (left side on signup) — text lives on the white side now -->
         <div class="auth-card__dark">
-            <h1>WELCOME<br/>BACK!</h1>
-            <p>Create a student account to enrol in courses at Greenfield Institute.</p>
+            <img class="auth-card__hero" src="assets/img/login-hero.jpeg" alt="Greenfield Institute campus" />
         </div>
 
         <!-- Form panel (right side on signup) -->
         <div class="auth-card__form">
             <div class="auth-card__form-inner">
-                <h2>Sign Up</h2>
+                <div class="auth-welcome">
+                    <h1>CREATE<br/>ACCOUNT</h1>
+                    <p>Create a student account to enrol in courses at Greenfield Institute.</p>
+                </div>
 
                 <form id="signupForm" novalidate>
                     <div class="auth-field">
