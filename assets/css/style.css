@@ -336,12 +336,12 @@ body {
 }
 
 /* Apply the animations when JS adds .is-going-to-X to the body. */
-.is-going-to-signup .auth-card__dark { animation: dark-l2s 2500ms var(--auth-ease) both; }
-.is-going-to-signup .auth-card__hero { animation: hero-l2s 2500ms var(--auth-ease) both; }
-.is-going-to-login  .auth-card__dark { animation: dark-s2l 2500ms var(--auth-ease) both; }
-.is-going-to-login  .auth-card__hero { animation: hero-s2l 2500ms var(--auth-ease) both; }
+.is-going-to-signup .auth-card__dark { animation: dark-l2s 3000ms var(--auth-ease) both; }
+.is-going-to-signup .auth-card__hero { animation: hero-l2s 3000ms var(--auth-ease) both; }
+.is-going-to-login  .auth-card__dark { animation: dark-s2l 3000ms var(--auth-ease) both; }
+.is-going-to-login  .auth-card__hero { animation: hero-s2l 3000ms var(--auth-ease) both; }
 .is-going-to-signup .auth-card__form,
-.is-going-to-login  .auth-card__form { animation: form-swap 2500ms var(--auth-ease) both; }
+.is-going-to-login  .auth-card__form { animation: form-swap 3000ms var(--auth-ease) both; }
 
 /* Floating light/dark toggle — sits in a corner of every page. */
 .theme-toggle {

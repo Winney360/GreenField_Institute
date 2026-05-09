@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------
 
 (function () {
-    const ANIM_MS = 2500;
+    const ANIM_MS = 3000;
     let isAnimating = false;
 
     // --- Mode switching with the choreographed animation -------
