@@ -5,17 +5,56 @@
    --------------------------------------------------------------- */
 
 :root {
-    --green-700: #2f7d4f;
-    --green-600: #36915c;
-    --green-100: #e6f4ec;
-    --grey-900: #1f2933;
-    --grey-700: #3e4c59;
-    --grey-300: #cbd2d9;
-    --grey-100: #f5f7fa;
-    --red-600:  #c53030;
-    --amber-100:#fff8e1;
-    --shadow:   0 2px 8px rgba(0, 0, 0, 0.08);
-    --radius:   8px;
+    /* --- Brand (same mint green in both modes) ----------------- */
+    --color-primary:      #2DD49B; /* mint emerald — Greenfield brand */
+    --color-primary-dark: #25B583; /* hover / pressed */
+    --color-primary-deep: #1A8A63; /* deeper accent if needed */
+
+    /* --- Light-mode tokens (defaults) -------------------------- */
+    --bg:         #FBFBFB;  /* page background — neutral off-white */
+    --surface:    #ffffff;  /* cards, modals */
+    --text:       #0f1a14;  /* headings, body */
+    --text-muted: #5a6661;  /* labels, captions */
+    --border:     #c9d6c2;  /* hairlines, input underlines */
+    --slab-bg:    #0f1a14;  /* hero slab fallback if image missing */
+
+    --shadow:     0 2px 8px rgba(0, 0, 0, 0.08);
+    --radius:     8px;
+
+    /* --- Backwards-compat aliases for older pages -------------- */
+    /* Existing rules still reference --green-700 etc., so map them
+       onto the new tokens — old pages pick up the new look for free. */
+    --green-700: var(--color-primary);
+    --green-600: var(--color-primary-dark);
+    --green-100: #ECF4E8;
+    --grey-900:  var(--text);
+    --grey-700:  var(--text-muted);
+    --grey-300:  var(--border);
+    --grey-100:  var(--bg);
+    --red-600:   #c53030;
+    --amber-100: #fff8e1;
+}
+
+/* --- Dark-mode tokens — applied either by user toggle (data-theme)
+   or by OS preference (prefers-color-scheme). User toggle wins
+   because [data-theme="light"] explicitly opts back into light. */
+[data-theme="dark"] {
+    --bg:         #000000;
+    --surface:    #0f0f0f;
+    --text:       #ECF4E8;
+    --text-muted: #8a938e;
+    --border:     #1f2520;
+    --slab-bg:    #0a0a0a;
+}
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg:         #000000;
+        --surface:    #0f0f0f;
+        --text:       #ECF4E8;
+        --text-muted: #8a938e;
+        --border:     #1f2520;
+        --slab-bg:    #0a0a0a;
+    }
 }
 
 * { box-sizing: border-box; }
@@ -23,8 +62,8 @@
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--grey-900);
-    background: var(--grey-100);
+    color: var(--text);
+    background: var(--bg);
     line-height: 1.5;
 }
 
@@ -68,14 +107,14 @@ body {
     margin: 0;
     height: 100vh;
     overflow: hidden;
-    background: #fff;
+    background: var(--bg);
 }
 
 .auth-card {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background: #fff;
+    background: var(--bg);
     overflow: hidden;
 }
 
@@ -84,7 +123,7 @@ body {
     position: absolute;
     inset: 0;
     clip-path: polygon(0 0, 62% 0, 44% 100%, 0 100%);
-    background: #0f1320; /* fallback if the image is missing */
+    background: var(--slab-bg); /* fallback if the image is missing */
     overflow: hidden;
 }
 .auth-card--login .auth-card__dark {
@@ -140,7 +179,7 @@ body {
     font-size: clamp(2rem, 3.5vw, 2.6rem);
     line-height: 1.1;
     margin: 0 0 0.75rem;
-    color: #0f1320;
+    color: var(--text);
     font-weight: 800;
     letter-spacing: 0.5px;
 }
@@ -149,13 +188,13 @@ body {
     display: block;
     width: 36px;
     height: 3px;
-    background: #0f1320;
+    background: var(--color-primary);
     margin-top: 0.75rem;
     border-radius: 2px;
 }
 .auth-welcome p {
     margin: 0;
-    color: #6b7280;
+    color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.55;
 }
@@ -168,22 +207,22 @@ body {
 .auth-field label {
     display: block;
     font-size: 0.8rem;
-    color: #6b7280;
+    color: var(--text-muted);
     margin-bottom: 0.25rem;
 }
 .auth-field input {
     width: 100%;
     border: none;
-    border-bottom: 1px solid #cbd2d9;
+    border-bottom: 1px solid var(--border);
     padding: 0.45rem 1.75rem 0.45rem 0;
     background: transparent;
     font-size: 0.95rem;
-    color: #0f1320;
+    color: var(--text);
     font-family: inherit;
 }
 .auth-field input:focus {
     outline: none;
-    border-bottom-color: #0f1320;
+    border-bottom-color: var(--color-primary);
 }
 .auth-field__icon {
     position: absolute;
@@ -191,15 +230,15 @@ body {
     bottom: 0.5rem;
     width: 18px;
     height: 18px;
-    color: #6b7280;
+    color: var(--text-muted);
     pointer-events: none;
 }
 
-/* Pill button. */
+/* Pill button — primary brand green in both modes. */
 .auth-btn {
     margin-top: 2rem;
     width: 100%;
-    background: #0f1320;
+    background: var(--color-primary);
     color: #fff;
     border: none;
     border-radius: 999px;
@@ -209,17 +248,17 @@ body {
     cursor: pointer;
     transition: background 0.15s ease;
 }
-.auth-btn:hover { background: #1f2435; }
-.auth-btn:disabled { background: #6b7280; cursor: not-allowed; }
+.auth-btn:hover { background: var(--color-primary-dark); }
+.auth-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
 
 .auth-card__switch {
     margin-top: 1.25rem;
     text-align: center;
     font-size: 0.8rem;
-    color: #6b7280;
+    color: var(--text-muted);
 }
 .auth-card__switch a {
-    color: #2c3e88;
+    color: var(--color-primary);
     text-decoration: none;
     font-weight: 600;
 }
@@ -227,6 +266,34 @@ body {
 
 .auth-card__msg { margin-top: 1rem; }
 .auth-card__msg .alert { font-size: 0.85rem; padding: 0.5rem 0.75rem; margin-bottom: 0; }
+
+/* Floating light/dark toggle — sits in a corner of every page. */
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    box-shadow: var(--shadow);
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+.theme-toggle:hover { transform: scale(1.05); }
+.theme-toggle svg { width: 18px; height: 18px; }
+/* JS sets data-theme on load, so we only need to check that one attribute.
+   Light mode → show moon (click to switch to dark).
+   Dark mode  → show sun  (click to switch to light). */
+.theme-toggle .icon-sun  { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
 /* --- Forms --------------------------------------------------- */
 form .field { margin-bottom: 1rem; }
