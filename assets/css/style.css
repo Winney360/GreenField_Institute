@@ -232,6 +232,34 @@ body {
     pointer-events: none;
 }
 
+/* Password show/hide toggle — same position as a regular icon, but it's a real
+   button so it can be clicked. Resets the global button styles so it doesn't
+   pick up the green pill look. */
+.auth-field__toggle {
+    position: absolute;
+    right: 0;
+    bottom: 0.25rem;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    color: var(--color-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+.auth-field__toggle:hover { background: transparent; color: var(--color-primary-dark); }
+.auth-field__toggle svg { width: 18px; height: 18px; }
+/* Show eye when password is hidden, eye-off when visible. */
+.auth-field__toggle .icon-eye-off { display: none; }
+.auth-field__toggle.is-visible .icon-eye { display: none; }
+.auth-field__toggle.is-visible .icon-eye-off { display: block; }
+
 /* Pill button — primary brand green in both modes. */
 .auth-btn {
     margin-top: 2rem;
