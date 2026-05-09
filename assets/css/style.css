@@ -230,7 +230,7 @@ body {
     bottom: 0.5rem;
     width: 18px;
     height: 18px;
-    color: var(--text-muted);
+    color: var(--color-primary);
     pointer-events: none;
 }
 
