@@ -63,6 +63,160 @@ body {
 .auth-wrap h2 { margin-top: 0; color: var(--green-700); }
 .auth-wrap .switch { font-size: 0.9rem; margin-top: 1rem; text-align: center; }
 
+/* --- Split-panel auth (login / signup) ----------------------- */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #f0f2f5;
+}
+
+.auth-card {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    height: 520px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+}
+
+/* Dark panel — diagonal slab. Default = signup (dark on left). */
+.auth-card__dark {
+    position: absolute;
+    inset: 0;
+    background: #0f1320;
+    color: #fff;
+    clip-path: polygon(0 0, 62% 0, 44% 100%, 0 100%);
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.auth-card--login .auth-card__dark {
+    /* mirror to the right side */
+    clip-path: polygon(38% 0, 100% 0, 100% 100%, 56% 100%);
+    padding-left: 50%;
+}
+.auth-card__dark h1 {
+    font-size: 2.4rem;
+    line-height: 1.05;
+    margin: 0 0 1rem;
+    letter-spacing: 0.5px;
+    font-weight: 800;
+}
+.auth-card__dark p {
+    margin: 0;
+    color: #c9ccd6;
+    font-size: 0.95rem;
+    max-width: 260px;
+    line-height: 1.55;
+}
+
+/* Form panel — sits on the opposite side of the diagonal. */
+.auth-card__form {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 3rem 4rem 3rem 0;
+}
+.auth-card--login .auth-card__form {
+    justify-content: flex-start;
+    padding: 3rem 0 3rem 4rem;
+}
+.auth-card__form-inner {
+    width: 320px;
+    max-width: 100%;
+}
+.auth-card__form h2 {
+    font-size: 1.8rem;
+    color: #0f1320;
+    margin: 0 0 0.4rem;
+    font-weight: 700;
+}
+.auth-card__form h2::after {
+    content: "";
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: #0f1320;
+    margin-top: 0.4rem;
+    border-radius: 2px;
+}
+
+/* Underline-style fields with right-aligned icon. */
+.auth-field {
+    position: relative;
+    margin-top: 1.5rem;
+}
+.auth-field label {
+    display: block;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+.auth-field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #cbd2d9;
+    padding: 0.45rem 1.75rem 0.45rem 0;
+    background: transparent;
+    font-size: 0.95rem;
+    color: #0f1320;
+    font-family: inherit;
+}
+.auth-field input:focus {
+    outline: none;
+    border-bottom-color: #0f1320;
+}
+.auth-field__icon {
+    position: absolute;
+    right: 0;
+    bottom: 0.5rem;
+    width: 18px;
+    height: 18px;
+    color: #6b7280;
+    pointer-events: none;
+}
+
+/* Pill button. */
+.auth-btn {
+    margin-top: 2rem;
+    width: 100%;
+    background: #0f1320;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.auth-btn:hover { background: #1f2435; }
+.auth-btn:disabled { background: #6b7280; cursor: not-allowed; }
+
+.auth-card__switch {
+    margin-top: 1.25rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+.auth-card__switch a {
+    color: #2c3e88;
+    text-decoration: none;
+    font-weight: 600;
+}
+.auth-card__switch a:hover { text-decoration: underline; }
+
+.auth-card__msg { margin-top: 1rem; }
+.auth-card__msg .alert { font-size: 0.85rem; padding: 0.5rem 0.75rem; margin-bottom: 0; }
+
 /* --- Forms --------------------------------------------------- */
 form .field { margin-bottom: 1rem; }
 form label  { display: block; font-size: 0.85rem; margin-bottom: 0.25rem; color: var(--grey-700); }
