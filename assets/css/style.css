@@ -195,6 +195,125 @@ body {
 .status-rejected { background: rgba(197, 48, 48, 0.15); color: var(--red-600); }
 .status-dropped  { background: rgba(107, 114, 128, 0.18); color: #6b7280; }
 
+/* --- Admin overview: action items + activity feed + capacity --- */
+
+/* Tier 1 — action item cards */
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.action-card:hover { transform: translateY(-2px); border-color: var(--color-primary); }
+.action-card .badge-count {
+    min-width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: rgba(45, 212, 155, 0.15);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 0 0.5rem;
+}
+.action-card.has-pending .badge-count {
+    background: rgba(217, 164, 65, 0.20);
+    color: #b8841e;
+}
+.action-card .action-card__body { flex: 1; }
+.action-card .action-card__label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+}
+.action-card .action-card__hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+}
+
+/* All-caught-up empty state */
+.action-empty {
+    background: rgba(45, 212, 155, 0.08);
+    border: 1px solid rgba(45, 212, 155, 0.4);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    text-align: center;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* Tier 3 — activity feed list */
+.activity-list {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.92rem;
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-item .activity-dot {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--color-primary); flex-shrink: 0;
+}
+.activity-item.is-admission .activity-dot { background: #3b82f6; }
+.activity-item.is-registration .activity-dot { background: var(--color-primary); }
+.activity-item .activity-text { flex: 1; color: var(--text); }
+.activity-item .activity-time { color: var(--text-muted); font-size: 0.8rem; }
+
+/* Tier 4 — capacity alerts with progress bar */
+.capacity-list {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.capacity-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+}
+.capacity-item:last-child { border-bottom: none; }
+.capacity-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+}
+.capacity-item__title { font-weight: 600; font-size: 0.92rem; color: var(--text); }
+.capacity-item__code  { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.4px; }
+.capacity-item__numbers { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+.capacity-bar {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(45, 212, 155, 0.15);
+    overflow: hidden;
+}
+.capacity-bar__fill {
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.2s ease;
+}
+.capacity-bar__fill.is-warning { background: #b8841e; }
+.capacity-bar__fill.is-full    { background: var(--red-600); }
+
 /* Profile-completion banner — shown only when incomplete */
 .profile-nag {
     display: flex;
