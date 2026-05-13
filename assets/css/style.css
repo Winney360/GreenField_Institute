@@ -36,27 +36,6 @@
     --amber-100: #fff8e1;
 }
 
-/* --- Dark-mode tokens — applied either by user toggle (data-theme)
-   or by OS preference (prefers-color-scheme). User toggle wins
-   because [data-theme="light"] explicitly opts back into light. */
-[data-theme="dark"] {
-    --bg:         #000000;
-    --surface:    #0f0f0f;
-    --text:       #ECF4E8;
-    --text-muted: #8a938e;
-    --border:     #1f2520;
-    --slab-bg:    #0a0a0a;
-}
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-        --bg:         #000000;
-        --surface:    #0f0f0f;
-        --text:       #ECF4E8;
-        --text-muted: #8a938e;
-        --border:     #1f2520;
-        --slab-bg:    #0a0a0a;
-    }
-}
 
 * { box-sizing: border-box; }
 
@@ -467,50 +446,6 @@ body {
 .is-going-to-signup .auth-card__form,
 .is-going-to-login  .auth-card__form { animation: form-swap 3500ms var(--auth-ease) both; }
 
-/* Floating light/dark toggle — sits in a corner of every page. */
-.theme-toggle {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    box-shadow: var(--shadow);
-    transition: transform 0.15s ease, background 0.15s ease;
-}
-.theme-toggle:hover { transform: scale(1.05); }
-.theme-toggle svg { width: 18px; height: 18px; }
-/* JS sets data-theme on load, so we only need to check that one attribute.
-   Light mode → show moon (click to switch to dark).
-   Dark mode  → show sun  (click to switch to light). */
-.theme-toggle .icon-sun  { display: none; }
-[data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
-[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
-
-/* --- Inline variant — sits inside the (now-white) navbar instead of floating */
-.theme-toggle--inline {
-    position: static;
-    margin-left: 1.25rem;
-    width: 32px;
-    height: 32px;
-    background: rgba(45, 212, 155, 0.1);   /* mint tint */
-    color: var(--color-primary);
-    border-color: rgba(45, 212, 155, 0.4);
-    box-shadow: none;
-}
-.theme-toggle--inline:hover {
-    background: rgba(45, 212, 155, 0.2);
-    transform: none;
-}
-.theme-toggle--inline svg { width: 16px; height: 16px; }
 
 /* --- Forms --------------------------------------------------- */
 form .field { margin-bottom: 1rem; }
