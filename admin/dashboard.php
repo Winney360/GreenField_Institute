@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 $admin = require_admin();
+// Greeting uses just the first word of the name (cleaner heading).
+$firstName = explode(' ', $admin['full_name'])[0];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +13,12 @@ $admin = require_admin();
     <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
 <body class="has-sidebar">
-    <header class="navbar"><h1><img class="navbar__logo" src="../assets/img/logo.png" alt="" />GREENFIELD INSTITUTE <span class="admin-label">ADMIN PANEL</span></h1></header>
+    <header class="navbar">
+        <button class="navbar__hamburger" type="button" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h1><img class="navbar__logo" src="../assets/img/logo.png" alt="" />GREENFIELD INSTITUTE <span class="admin-label">ADMIN PANEL</span></h1>
+    </header>
 
     <aside class="sidebar">
         <nav class="sidebar__nav">
@@ -42,7 +49,7 @@ $admin = require_admin();
 
     <main class="main">
       <div class="container">
-        <h2>Welcome back, <span class="user-name"><?= htmlspecialchars($admin['full_name']) ?></span></h2>
+        <h2>Welcome back, <span class="user-name"><?= htmlspecialchars($firstName) ?></span></h2>
         <p style="color:var(--text-muted); margin-top:0;">
             Operational view of the Greenfield Institute system.
         </p>
@@ -96,6 +103,7 @@ $admin = require_admin();
     </main>
 
     <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/nav.js"></script>
     <script>
         function timeAgo(iso) {
             const now = Date.now();

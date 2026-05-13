@@ -432,6 +432,78 @@ body {
 }
 .has-sidebar .container { margin-top: 1.5rem; }
 
+/* --- Hamburger button (lives in the navbar, mobile/tablet only) --- */
+.navbar__hamburger {
+    display: none;       /* hidden on desktop, shown via media query below */
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+.navbar__hamburger svg { width: 26px; height: 26px; }
+
+/* Click-to-close overlay behind the open sidebar. Element is injected
+   dynamically by nav.js; lives in the DOM but hidden until needed. */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: var(--navbar-h);
+    left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 40;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* --- Sidebar collapses into a hamburger menu on phones/tablets ----- */
+@media (max-width: 1199px) {
+    /* Show hamburger; pin it to the left of the navbar.
+       Brand stays centred because the hamburger is absolute. */
+    .has-sidebar .navbar__hamburger {
+        display: flex;
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    /* Push the navbar's content right so it doesn't overlap the hamburger,
+       and shrink the brand a bit so the wordmark fits on a phone. */
+    .has-sidebar .navbar {
+        padding-left: 3.75rem;
+    }
+    .has-sidebar .navbar h1 {
+        font-size: 1.15rem;
+        letter-spacing: 1px;
+        gap: 0.5rem;
+    }
+    .has-sidebar .navbar__logo {
+        height: 36px;
+    }
+
+    /* Sidebar starts hidden off-screen to the left, slides in on toggle.
+       Higher z-index than backdrop so it sits on top of the dim overlay. */
+    .has-sidebar .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 55;
+    }
+    .has-sidebar.sidebar-open .sidebar {
+        transform: translateX(0);
+    }
+
+    /* Main column reclaims full width — no sidebar in flow on mobile. */
+    .has-sidebar .main {
+        margin-left: 0;
+    }
+
+    /* Backdrop visible when sidebar is open. */
+    .has-sidebar .sidebar-backdrop { display: block; }
+    .has-sidebar.sidebar-open .sidebar-backdrop { opacity: 1; }
+}
+
 .auth-wrap {
     max-width: 420px;
     margin: 4rem auto;
