@@ -20,6 +20,7 @@
 
     --shadow:     0 2px 8px rgba(0, 0, 0, 0.08);
     --radius:     8px;
+    --navbar-h:   3.5rem;  /* fixed top navbar height — used by sidebar offset */
 
     /* --- Backwards-compat aliases for older pages -------------- */
     /* Existing rules still reference --green-700 etc., so map them
@@ -197,14 +198,17 @@ body {
 .sidebar__footer .logout:hover { color: #a02525; }
 .sidebar__footer .logout svg { width: 18px; height: 18px; }
 
-/* Layout shift on pages that have a sidebar — push the main column right. */
+/* Layout on pages that combine navbar (top) + sidebar (left).
+   Navbar is full-width at top, sidebar starts BELOW it on the left,
+   main content starts to the right of sidebar AND below the navbar. */
+.has-sidebar .navbar       { justify-content: center; }  /* center the brand */
+.has-sidebar .sidebar      { top: var(--navbar-h); }     /* drop below the navbar */
 .has-sidebar .main {
     margin-left: 240px;
-    min-height: 100vh;
+    margin-top: var(--navbar-h);
+    min-height: calc(100vh - var(--navbar-h));
 }
-.has-sidebar .container {
-    margin-top: 1.5rem;  /* no fixed navbar to clear here */
-}
+.has-sidebar .container { margin-top: 1.5rem; }
 
 .auth-wrap {
     max-width: 420px;
