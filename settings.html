@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My courses · Greenfield Institute</title>
+    <title>Settings · Greenfield Institute</title>
     <link rel="stylesheet" href="assets/css/style.css" />
     <script src="assets/js/theme.js"></script>
 </head>
@@ -20,7 +20,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                 Available courses
             </a>
-            <a href="my-courses.html" class="active">
+            <a href="my-courses.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                 My courses
             </a>
@@ -32,7 +32,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Profile
             </a>
-            <a href="settings.html">
+            <a href="settings.html" class="active">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 Settings
             </a>
@@ -51,55 +51,64 @@
 
     <main class="main">
       <div class="container">
-        <h2>My registrations</h2>
+        <h2>Settings</h2>
+        <p style="color:var(--text-muted); margin-top:0;">
+            Manage your account security. Choose a strong password — at least 8 characters.
+        </p>
         <div id="msg"></div>
-        <div id="grid" class="course-grid"></div>
+
+        <form id="passwordForm" class="course-card" style="max-width: 480px; margin-top: 1rem;">
+            <h3 style="margin: 0 0 1rem;">Change password</h3>
+
+            <div class="field" style="position: relative;">
+                <label for="curPw">Current password</label>
+                <input id="curPw" type="password" required minlength="8" />
+            </div>
+
+            <div class="field" style="position: relative;">
+                <label for="newPw">New password</label>
+                <input id="newPw" type="password" required minlength="8" />
+            </div>
+
+            <div class="field" style="position: relative;">
+                <label for="confirmPw">Confirm new password</label>
+                <input id="confirmPw" type="password" required minlength="8" />
+            </div>
+
+            <button type="submit" id="saveBtn">Update password</button>
+        </form>
       </div>
     </main>
 
     <script src="assets/js/api.js"></script>
     <script>
-        async function load() {
-            const res = await api.get('api/my_courses.php');
-            const grid = document.getElementById('grid');
-            if (!res.ok) { flash('msg', res.error || 'Failed to load.', 'error'); return; }
-            const active = res.registrations.filter(r => r.status === 'active');
-            if (!active.length) {
-                grid.innerHTML = `
-                    <p style="color:var(--grey-700)">
-                        You have not registered for any courses yet.
-                        <a href="courses.html">Browse the catalogue</a> to get started.
-                    </p>`;
+        const form = document.getElementById('passwordForm');
+        const btn  = document.getElementById('saveBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const cur     = document.getElementById('curPw').value;
+            const next    = document.getElementById('newPw').value;
+            const confirm = document.getElementById('confirmPw').value;
+
+            if (next !== confirm) {
+                flash('msg', 'New password and confirmation do not match.', 'error');
                 return;
             }
-            grid.innerHTML = active.map(r => `
-                <article class="course-card">
-                    <div class="code">${escapeHtml(r.course_code)} · ${escapeHtml(r.department)}</div>
-                    <h3>${escapeHtml(r.title)}</h3>
-                    <div class="meta">
-                        <span>${escapeHtml(r.instructor)}</span>
-                        <span>${r.credits} credits</span>
-                        <span>Registered ${new Date(r.registered_at).toLocaleDateString()}</span>
-                    </div>
-                    <div class="actions">
-                        <button class="btn-danger" data-id="${r.course_id}">Drop course</button>
-                    </div>
-                </article>
-            `).join('');
 
-            grid.querySelectorAll('button[data-id]').forEach(b =>
-                b.addEventListener('click', () => drop(b.dataset.id))
-            );
-        }
-
-        async function drop(courseId) {
-            if (!confirm('Drop this course?')) return;
-            const res = await api.post('api/drop.php', { course_id: Number(courseId) });
-            if (res.ok) { flash('msg', 'Course dropped.', 'success'); load(); }
-            else        { flash('msg', res.error || 'Drop failed.', 'error'); }
-        }
-
-        load();
+            btn.disabled = true; btn.textContent = 'Saving…';
+            const res = await api.post('api/change_password.php', {
+                current_password: cur,
+                new_password:     next,
+            });
+            if (res.ok) {
+                flash('msg', 'Password updated.', 'success');
+                form.reset();
+            } else {
+                flash('msg', res.error || 'Update failed.', 'error');
+            }
+            btn.disabled = false; btn.textContent = 'Update password';
+        });
     </script>
 </body>
 </html>
