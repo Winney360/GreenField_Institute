@@ -223,6 +223,10 @@ body {
     outline: none;
     border-bottom-color: var(--color-primary);
 }
+/* Edge injects its own password-reveal eye + clear button — hide them so
+   our custom mint eye is the only one users see. */
+.auth-field input::-ms-reveal,
+.auth-field input::-ms-clear { display: none; }
 .auth-field__icon {
     position: absolute;
     right: 0;
@@ -257,6 +261,7 @@ body {
 .auth-field__toggle:hover { background: transparent; color: var(--color-primary-dark); }
 .auth-field__toggle svg { width: 18px; height: 18px; }
 /* Show eye when password is hidden, eye-off when visible. */
+.auth-field__toggle .icon-eye { display: block; }
 .auth-field__toggle .icon-eye-off { display: none; }
 .auth-field__toggle.is-visible .icon-eye { display: none; }
 .auth-field__toggle.is-visible .icon-eye-off { display: block; }
@@ -371,24 +376,43 @@ body {
 [data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
 [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
+/* --- Inline variant — sits inside a navbar instead of floating ------ */
+.theme-toggle--inline {
+    position: static;
+    margin-left: 1rem;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+}
+.theme-toggle--inline:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: none;
+}
+.theme-toggle--inline svg { width: 16px; height: 16px; }
+
 /* --- Forms --------------------------------------------------- */
 form .field { margin-bottom: 1rem; }
-form label  { display: block; font-size: 0.85rem; margin-bottom: 0.25rem; color: var(--grey-700); }
+form label  { display: block; font-size: 0.85rem; margin-bottom: 0.25rem; color: var(--text-muted); }
 form input, form textarea, form select {
     width: 100%;
     padding: 0.55rem 0.7rem;
-    border: 1px solid var(--grey-300);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     font-size: 0.95rem;
     font-family: inherit;
+    background: var(--bg);
+    color: var(--text);
 }
 form input:focus, form textarea:focus, form select:focus {
-    outline: 2px solid var(--green-600);
-    border-color: var(--green-600);
+    outline: 2px solid var(--color-primary);
+    border-color: var(--color-primary);
 }
 
 button, .btn {
-    background: var(--green-700);
+    background: var(--color-primary);
     color: #fff;
     border: none;
     padding: 0.6rem 1.1rem;
@@ -398,69 +422,102 @@ button, .btn {
     text-decoration: none;
     display: inline-block;
 }
-button:hover, .btn:hover { background: var(--green-600); }
-button:disabled { background: var(--grey-300); cursor: not-allowed; }
-.btn-secondary { background: var(--grey-700); }
+button:hover, .btn:hover { background: var(--color-primary-dark); }
+button:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0.6; }
+/* Outline-style secondary button — works on both light and dark surfaces. */
+.btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--bg); border-color: var(--text-muted); }
 .btn-danger    { background: var(--red-600); }
+.btn-danger:hover { background: #a02525; }
 
-/* --- Alerts -------------------------------------------------- */
+/* --- Alerts --------------------------------------------------
+   Use rgba backgrounds so they tint nicely on both light and dark surfaces. */
 .alert { padding: 0.75rem 1rem; border-radius: var(--radius); margin-bottom: 1rem; font-size: 0.9rem; }
-.alert.error   { background: #fde2e2; color: var(--red-600); }
-.alert.success { background: var(--green-100); color: var(--green-700); }
-.alert.info    { background: var(--amber-100); color: #8a6d1f; }
+.alert.error   { background: rgba(197, 48, 48, 0.15);  color: var(--red-600); }
+.alert.success { background: rgba(45, 212, 155, 0.15); color: var(--color-primary); }
+.alert.info    { background: rgba(217, 164, 65, 0.18); color: #d9a441; }
 
 /* --- Cards & course grid ------------------------------------- */
 .toolbar {
     display: flex; gap: 0.75rem; flex-wrap: wrap;
     margin-bottom: 1rem;
-    background: #fff; padding: 1rem; border-radius: var(--radius); box-shadow: var(--shadow);
+    background: var(--surface); padding: 1rem; border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--border);
 }
 .toolbar input, .toolbar select { flex: 1 1 180px; }
 
 .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
 
 .course-card {
-    background: #fff;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     padding: 1rem 1.1rem;
     display: flex; flex-direction: column;
 }
-.course-card h3 { margin: 0 0 0.25rem; color: var(--green-700); font-size: 1.05rem; }
-.course-card .code { font-size: 0.8rem; color: var(--grey-700); letter-spacing: 0.5px; }
-.course-card p   { font-size: 0.9rem; color: var(--grey-700); flex-grow: 1; }
+.course-card h3 { margin: 0 0 0.25rem; color: var(--color-primary); font-size: 1.05rem; }
+.course-card .code { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.5px; }
+.course-card p   { font-size: 0.9rem; color: var(--text-muted); flex-grow: 1; }
 .course-card .meta {
     display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
-    font-size: 0.8rem; color: var(--grey-700);
+    font-size: 0.8rem; color: var(--text-muted);
     margin: 0.5rem 0 0.75rem;
 }
-.course-card .meta span::before { content: "•  "; color: var(--green-600); }
+.course-card .meta span::before { content: "•  "; color: var(--color-primary); }
 .course-card .actions { display: flex; gap: 0.5rem; }
 
 .badge {
     display: inline-block; font-size: 0.7rem; padding: 0.15rem 0.5rem;
-    border-radius: 999px; background: var(--green-100); color: var(--green-700);
+    border-radius: 999px;
+    background: rgba(45, 212, 155, 0.15); color: var(--color-primary);
     margin-left: 0.4rem;
 }
-.badge.full { background: #fde2e2; color: var(--red-600); }
+.badge.full { background: rgba(197, 48, 48, 0.15); color: var(--red-600); }
 
-/* --- Tables (admin) ----------------------------------------- */
-table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: var(--shadow); border-radius: var(--radius); overflow: hidden; }
-table th, table td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--grey-300); font-size: 0.9rem; }
-table th { background: var(--green-100); color: var(--green-700); font-weight: 600; }
+/* --- Tables (admin) -----------------------------------------
+   Use semantic tokens so the table swaps cleanly between modes.
+   Header background is a low-opacity tint of the brand mint,
+   which reads well on both white and near-black surfaces. */
+table {
+    width: 100%; border-collapse: collapse;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+table th, table td {
+    padding: 0.6rem 0.8rem; text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text);
+}
+table th {
+    background: rgba(45, 212, 155, 0.12);
+    color: var(--color-primary);
+    font-weight: 600;
+}
 table tr:last-child td { border-bottom: none; }
+table tbody tr:hover { background: rgba(45, 212, 155, 0.05); }
 
 /* --- Modal --------------------------------------------------- */
 .modal-backdrop {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+    position: fixed; inset: 0; background: rgba(0,0,0,0.55);
     display: none; align-items: center; justify-content: center; z-index: 50;
 }
 .modal-backdrop.active { display: flex; }
 .modal {
-    background: #fff; border-radius: var(--radius); padding: 1.5rem;
-    width: 90%; max-width: 480px; box-shadow: var(--shadow);
+    background: var(--surface); border-radius: var(--radius); padding: 1.5rem;
+    width: 90%; max-width: 480px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    color: var(--text);
 }
-.modal h3 { margin-top: 0; color: var(--green-700); }
+.modal h3 { margin-top: 0; color: var(--color-primary); }
 
 /* --- Responsive --------------------------------------------- */
 @media (max-width: 768px) {
