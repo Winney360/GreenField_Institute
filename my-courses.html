@@ -46,9 +46,21 @@
 
     <main class="main">
       <div class="container">
-        <h2>My registrations</h2>
+        <div class="dash-section__header">
+            <h2 style="color: var(--color-primary); margin: 0;">Current Registered Units</h2>
+        </div>
         <div id="msg"></div>
-        <div id="grid" class="course-grid"></div>
+        <table id="regTable">
+            <thead>
+                <tr>
+                    <th>Unit Name</th>
+                    <th>Unit Code</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+        </table>
       </div>
     </main>
 
@@ -56,33 +68,34 @@
     <script>
         async function load() {
             const res = await api.get('api/my_courses.php');
-            const grid = document.getElementById('grid');
+            const rowsEl = document.getElementById('rows');
             if (!res.ok) { flash('msg', res.error || 'Failed to load.', 'error'); return; }
-            const active = res.registrations.filter(r => r.status === 'active');
-            if (!active.length) {
-                grid.innerHTML = `
-                    <p style="color:var(--grey-700)">
+
+            // Show every status except dropped (those are gone from "current").
+            const list = res.registrations.filter(r => r.status !== 'dropped');
+
+            if (!list.length) {
+                rowsEl.innerHTML = `
+                    <tr><td colspan="4" style="color: var(--text-muted); text-align: center; padding: 1.5rem;">
                         You have not registered for any courses yet.
-                        <a href="courses.html">Browse the catalogue</a> to get started.
-                    </p>`;
+                        <a href="courses.html" style="color: var(--color-primary); font-weight: 600;">Browse the catalogue</a> to get started.
+                    </td></tr>`;
                 return;
             }
-            grid.innerHTML = active.map(r => `
-                <article class="course-card">
-                    <div class="code">${escapeHtml(r.course_code)} · ${escapeHtml(r.department)}</div>
-                    <h3>${escapeHtml(r.title)}</h3>
-                    <div class="meta">
-                        <span>${escapeHtml(r.instructor)}</span>
-                        <span>${r.credits} credits</span>
-                        <span>Registered ${new Date(r.registered_at).toLocaleDateString()}</span>
-                    </div>
-                    <div class="actions">
-                        <button class="btn-danger" data-id="${r.course_id}">Drop course</button>
-                    </div>
-                </article>
+
+            rowsEl.innerHTML = list.map(r => `
+                <tr>
+                    <td>${escapeHtml(r.title)}</td>
+                    <td>${escapeHtml(r.course_code)}</td>
+                    <td><span class="status-pill status-${escapeHtml(r.status)}">${escapeHtml(r.status)}</span></td>
+                    <td>${r.status !== 'rejected'
+                        ? `<button class="btn-danger" data-id="${r.course_id}">Drop</button>`
+                        : ''
+                    }</td>
+                </tr>
             `).join('');
 
-            grid.querySelectorAll('button[data-id]').forEach(b =>
+            rowsEl.querySelectorAll('button[data-id]').forEach(b =>
                 b.addEventListener('click', () => drop(b.dataset.id))
             );
         }

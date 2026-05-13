@@ -25,11 +25,13 @@ if ($course_id <= 0) {
 $pdo = db();
 $pdo->beginTransaction();
 try {
-    // Lock the course row so capacity checks are race-free.
+    // Lock the course row so capacity checks are race-free. Capacity is
+    // counted against approved + pending — both consume a seat.
     $stmt = $pdo->prepare(
         'SELECT capacity,
                 (SELECT COUNT(*) FROM registrations r
-                  WHERE r.course_id = c.course_id AND r.status = "active") AS enrolled
+                  WHERE r.course_id = c.course_id
+                    AND r.status IN ("approved","pending")) AS enrolled
            FROM courses c
           WHERE course_id = ? FOR UPDATE'
     );
@@ -46,7 +48,7 @@ try {
     );
     $chk->execute([$user['user_id'], $course_id]);
     $existing = $chk->fetch();
-    if ($existing && $existing['status'] === 'active') {
+    if ($existing && in_array($existing['status'], ['pending', 'approved'], true)) {
         $pdo->rollBack();
         json_response(['ok' => false, 'error' => 'You are already registered for this course.'], 409);
     }
@@ -57,13 +59,15 @@ try {
     }
 
     if ($existing) {
-        // Re-activate a previously dropped registration rather than insert.
+        // Re-register a previously dropped/rejected enrolment: status goes
+        // back to 'pending' so the admin re-approves it.
         $upd = $pdo->prepare(
-            'UPDATE registrations SET status = "active", registered_at = NOW()
+            'UPDATE registrations SET status = "pending", registered_at = NOW()
               WHERE user_id = ? AND course_id = ?'
         );
         $upd->execute([$user['user_id'], $course_id]);
     } else {
+        // New rows default to 'pending' per the DB schema.
         $ins = $pdo->prepare(
             'INSERT INTO registrations (user_id, course_id) VALUES (?, ?)'
         );
@@ -71,7 +75,7 @@ try {
     }
 
     $pdo->commit();
-    json_response(['ok' => true, 'message' => 'Successfully registered.']);
+    json_response(['ok' => true, 'message' => 'Registration submitted — pending admin approval.']);
 } catch (Throwable $e) {
     if ($pdo->inTransaction()) $pdo->rollBack();
     json_response(['ok' => false, 'error' => 'Server error: ' . $e->getMessage()], 500);

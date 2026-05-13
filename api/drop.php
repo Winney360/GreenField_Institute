@@ -12,7 +12,7 @@ $course_id = (int)($body['course_id'] ?? 0);
 
 $stmt = db()->prepare(
     'UPDATE registrations SET status = "dropped"
-      WHERE user_id = ? AND course_id = ? AND status = "active"'
+      WHERE user_id = ? AND course_id = ? AND status IN ("approved","pending")'
 );
 $stmt->execute([$user['user_id'], $course_id]);
 

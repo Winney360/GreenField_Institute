@@ -182,6 +182,20 @@ body {
     font-size: 0.9rem;
 }
 
+/* --- Status pills (used in tables: pending / approved / rejected / dropped) */
+.status-pill {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.status-approved { background: rgba(45, 212, 155, 0.18); color: var(--color-primary); }
+.status-pending  { background: rgba(217, 164, 65, 0.20); color: #b8841e; }
+.status-rejected { background: rgba(197, 48, 48, 0.15); color: var(--red-600); }
+.status-dropped  { background: rgba(107, 114, 128, 0.18); color: #6b7280; }
+
 /* Profile-completion banner — shown only when incomplete */
 .profile-nag {
     display: flex;
@@ -204,31 +218,19 @@ body {
 .profile-nag a:hover { text-decoration: underline; }
 
 /* --- Side navigation (student pages) -------------------------
-   Fixed full-height rail on the left. Mirrors the navbar concept but
-   vertically — better for adding more items without crowding. */
+   Mint-green rail on the left. Sits flush below the fixed navbar.
+   All text and icons render white against the green surface. */
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     width: 240px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
+    background: var(--color-primary);
+    border-right: none;
     display: flex;
     flex-direction: column;
     z-index: 50;
-}
-.sidebar__brand {
-    padding: 1.5rem 1.5rem 1.25rem;
-    border-bottom: 1px solid var(--border);
-}
-.sidebar__brand h1 {
-    font-size: 1rem;
-    margin: 0;
-    font-weight: 700;
-    color: var(--color-primary);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
 }
 .sidebar__nav {
     flex: 1;
@@ -242,7 +244,7 @@ body {
     align-items: center;
     gap: 0.85rem;
     padding: 0.75rem 1.5rem;
-    color: var(--text);
+    color: #fff;
     text-decoration: none;
     font-size: 0.92rem;
     font-weight: 500;
@@ -250,13 +252,13 @@ body {
     transition: background 0.15s ease, color 0.15s ease, border-left-color 0.15s ease;
 }
 .sidebar__nav a:hover {
-    background: rgba(45, 212, 155, 0.08);
-    color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
 }
 .sidebar__nav a.active {
-    background: rgba(45, 212, 155, 0.12);
-    color: var(--color-primary);
-    border-left-color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    border-left-color: #fff;
 }
 .sidebar__nav a svg {
     width: 18px;
@@ -265,22 +267,22 @@ body {
 }
 .sidebar__footer {
     padding: 1rem 1.5rem 1.25rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 .sidebar__footer .logout {
-    color: var(--red-600);
+    color: #cc2929;   /* deep red — readable on mint without being neon */
     text-decoration: none;
     font-size: 0.92rem;
-    font-weight: 500;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     flex: 1;
 }
-.sidebar__footer .logout:hover { color: #a02525; }
+.sidebar__footer .logout:hover { color: #ffffff; }
 .sidebar__footer .logout svg { width: 18px; height: 18px; }
 
 /* Layout on pages that combine navbar (top) + sidebar (left).

@@ -19,23 +19,25 @@ $stmt = $pdo->prepare(
 $stmt->execute([$uid]);
 $profile = $stmt->fetch() ?: [];
 
-// --- Current (active) enrolments + sum of credits -------------------
+// --- Current enrolments (approved + pending) + status -----------
 $stmt = $pdo->prepare(
-    'SELECT c.course_id, c.course_code, c.title, c.instructor, c.credits
+    'SELECT c.course_id, c.course_code, c.title, c.instructor, c.credits,
+            r.status
        FROM registrations r
        JOIN courses c ON c.course_id = r.course_id
-      WHERE r.user_id = ? AND r.status = "active"
+      WHERE r.user_id = ? AND r.status IN ("approved","pending")
       ORDER BY r.registered_at DESC
       LIMIT 5'
 );
 $stmt->execute([$uid]);
 $currentCourses = $stmt->fetchAll();
 
+// Stat totals — count only confirmed (approved) enrolments.
 $stmt = $pdo->prepare(
     'SELECT COUNT(*) AS cnt, COALESCE(SUM(c.credits), 0) AS credits
        FROM registrations r
        JOIN courses c ON c.course_id = r.course_id
-      WHERE r.user_id = ? AND r.status = "active"'
+      WHERE r.user_id = ? AND r.status = "approved"'
 );
 $stmt->execute([$uid]);
 $totals = $stmt->fetch();
@@ -56,11 +58,12 @@ $params = [$uid];
 $sql = 'SELECT c.course_id, c.course_code, c.title, c.department,
                c.instructor, c.credits, c.capacity,
                (SELECT COUNT(*) FROM registrations r2
-                  WHERE r2.course_id = c.course_id AND r2.status = "active") AS enrolled
+                  WHERE r2.course_id = c.course_id
+                    AND r2.status IN ("approved","pending")) AS enrolled
           FROM courses c
          WHERE c.course_id NOT IN (
                SELECT course_id FROM registrations
-                WHERE user_id = ? AND status = "active"
+                WHERE user_id = ? AND status IN ("approved","pending")
            )';
 if ($dept !== null && $dept !== '') {
     $sql .= ' AND c.department = ?';

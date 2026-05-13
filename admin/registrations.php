@@ -32,7 +32,7 @@ require_admin();
             <thead>
                 <tr>
                     <th>Student</th><th>Email</th><th>Course</th>
-                    <th>Status</th><th>Registered</th>
+                    <th>Status</th><th>Registered</th><th>Actions</th>
                 </tr>
             </thead>
             <tbody id="rows"></tbody>
@@ -65,7 +65,7 @@ require_admin();
                 : all;
 
             if (!list.length) {
-                rowsEl.innerHTML = '<tr><td colspan="5" style="color:var(--grey-700)">No registrations match.</td></tr>';
+                rowsEl.innerHTML = '<tr><td colspan="6" style="color:var(--text-muted)">No registrations match.</td></tr>';
                 return;
             }
             rowsEl.innerHTML = list.map(r => `
@@ -73,10 +73,31 @@ require_admin();
                     <td>${escapeHtml(r.full_name)}</td>
                     <td>${escapeHtml(r.email)}</td>
                     <td>${escapeHtml(r.course_code)} — ${escapeHtml(r.title)}</td>
-                    <td>${escapeHtml(r.status)}</td>
+                    <td><span class="status-pill status-${escapeHtml(r.status)}">${escapeHtml(r.status)}</span></td>
                     <td>${new Date(r.registered_at).toLocaleString()}</td>
+                    <td>
+                        ${r.status === 'pending' ? `
+                            <button data-act="approve" data-id="${r.registration_id}">Approve</button>
+                            <button class="btn-danger" data-act="reject" data-id="${r.registration_id}">Reject</button>
+                        ` : '—'}
+                    </td>
                 </tr>
             `).join('');
+
+            rowsEl.querySelectorAll('button[data-id]').forEach(b => {
+                b.addEventListener('click', () => act(b.dataset.act, b.dataset.id));
+            });
+        }
+
+        async function act(action, regId) {
+            const verb = action === 'approve' ? 'approve' : 'reject';
+            if (!confirm(`Are you sure you want to ${verb} this registration?`)) return;
+            const res = await api.post('../api/admin_registrations.php', {
+                action,
+                registration_id: Number(regId),
+            });
+            if (res.ok) { flash('msg', `Registration ${res.status}.`, 'success'); load(); }
+            else        { flash('msg', res.error || `${verb} failed.`, 'error'); }
         }
 
         load();
