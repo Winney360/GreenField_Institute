@@ -20,7 +20,7 @@
 
     --shadow:     0 2px 8px rgba(0, 0, 0, 0.08);
     --radius:     8px;
-    --navbar-h:   4.5rem;  /* fixed top navbar height — used by sidebar offset */
+    --navbar-h:   5rem;    /* fixed top navbar height — used by sidebar offset */
 
     /* --- Backwards-compat aliases for older pages -------------- */
     /* Existing rules still reference --green-700 etc., so map them
@@ -56,13 +56,13 @@ body {
     left: 0;
     right: 0;
     z-index: 50;
+    height: var(--navbar-h);          /* lock the height so the sidebar lines up */
     background: var(--surface);
     color: var(--color-primary);
-    padding: 1.1rem 1.5rem;
+    padding: 0 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
     border-bottom: 1px solid var(--border);
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
 }
