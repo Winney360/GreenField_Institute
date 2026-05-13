@@ -48,29 +48,96 @@
     <main class="main">
       <div class="container">
         <h2>My profile</h2>
+        <p style="color:var(--text-muted); margin-top:0;">
+            Update your personal details. Email is tied to your account and can't be changed here.
+        </p>
         <div id="msg"></div>
 
-        <div class="course-card" style="max-width: 480px; margin-top: 1rem;">
-            <h3 style="margin-bottom: 1rem;">Account details</h3>
-            <p style="margin: 0.25rem 0;"><strong>Name:</strong> <span id="pName">—</span></p>
-            <p style="margin: 0.25rem 0;"><strong>Email:</strong> <span id="pEmail">—</span></p>
-            <p style="margin: 0.25rem 0;"><strong>Role:</strong> <span id="pRole">—</span></p>
-        </div>
+        <form id="profileForm" class="course-card" style="max-width: 560px; margin-top: 1rem;">
+            <div class="field">
+                <label for="pEmail">Email</label>
+                <input id="pEmail" type="email" disabled />
+            </div>
+
+            <div class="field">
+                <label for="pName">Full name</label>
+                <input id="pName" type="text" required maxlength="120" />
+            </div>
+
+            <div class="field">
+                <label for="pRegNum">Registration number</label>
+                <input id="pRegNum" type="text" maxlength="20" placeholder="e.g. GF2025-001" />
+            </div>
+
+            <div class="field" style="display:flex; gap:0.75rem;">
+                <div style="flex: 1;">
+                    <label for="pYob">Year of birth</label>
+                    <input id="pYob" type="number" min="1900" max="2100" placeholder="1999" />
+                </div>
+                <div style="flex: 1;">
+                    <label for="pGender">Gender</label>
+                    <select id="pGender">
+                        <option value="">—</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer_not_to_say">Prefer not to say</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="pDept">Department</label>
+                <input id="pDept" type="text" maxlength="80" placeholder="e.g. Computer Science" />
+            </div>
+
+            <div class="field">
+                <label for="pProg">Programme</label>
+                <input id="pProg" type="text" maxlength="120" placeholder="e.g. BSc Software Engineering" />
+            </div>
+
+            <button type="submit" id="saveBtn">Save changes</button>
+        </form>
       </div>
     </main>
 
     <script src="assets/js/api.js"></script>
     <script>
+        const form = document.getElementById('profileForm');
+        const btn  = document.getElementById('saveBtn');
+
+        // Load existing values from the server, populating the form.
         (async () => {
-            const me = await api.get('api/me.php');
-            if (me.ok) {
-                document.getElementById('pName').textContent  = me.user.full_name;
-                document.getElementById('pEmail').textContent = me.user.email;
-                document.getElementById('pRole').textContent  = me.user.role;
-            } else {
-                flash('msg', 'Could not load profile.', 'error');
+            const res = await api.get('api/profile.php');
+            if (!res.ok) {
+                flash('msg', res.error || 'Could not load profile.', 'error');
+                return;
             }
+            const p = res.profile;
+            document.getElementById('pEmail').value  = p.email                  ?? '';
+            document.getElementById('pName').value   = p.full_name              ?? '';
+            document.getElementById('pRegNum').value = p.registration_number    ?? '';
+            document.getElementById('pYob').value    = p.year_of_birth          ?? '';
+            document.getElementById('pGender').value = p.gender                 ?? '';
+            document.getElementById('pDept').value   = p.department             ?? '';
+            document.getElementById('pProg').value   = p.programme              ?? '';
         })();
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btn.disabled = true; btn.textContent = 'Saving…';
+            const res = await api.post('api/profile.php', {
+                full_name:           document.getElementById('pName').value.trim(),
+                registration_number: document.getElementById('pRegNum').value.trim(),
+                year_of_birth:       document.getElementById('pYob').value,
+                gender:              document.getElementById('pGender').value,
+                department:          document.getElementById('pDept').value.trim(),
+                programme:           document.getElementById('pProg').value.trim(),
+            });
+            if (res.ok) flash('msg', 'Profile updated.', 'success');
+            else        flash('msg', res.error || 'Save failed.', 'error');
+            btn.disabled = false; btn.textContent = 'Save changes';
+        });
     </script>
 </body>
 </html>
