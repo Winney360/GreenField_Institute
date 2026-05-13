@@ -74,6 +74,13 @@ body {
     text-transform: uppercase;
     letter-spacing: 2.5px;
 }
+/* "ADMIN PANEL" suffix in the admin navbar — deep teal that pairs with the
+   mint brand (analogous on the colour wheel). Reads as a sub-label without
+   the harsh contrast of pure black. */
+.navbar h1 .admin-label {
+    color: #3A5F66;
+    font-weight: 700;
+}
 .navbar nav a {
     color: var(--color-primary);
     text-decoration: none;

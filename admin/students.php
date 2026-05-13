@@ -11,7 +11,7 @@ require_admin();
     <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
 <body class="has-sidebar">
-    <header class="navbar"><h1>GREENFIELD INSTITUTE</h1></header>
+    <header class="navbar"><h1>GREENFIELD INSTITUTE <span class="admin-label">ADMIN PANEL</span></h1></header>
 
     <aside class="sidebar">
         <nav class="sidebar__nav">
