@@ -10,20 +10,39 @@ $admin = require_admin();
     <title>Admin · Greenfield Institute</title>
     <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
-<body>
-    <header class="navbar">
-        <h1>Greenfield Admin</h1>
-        <nav>
-            <a href="dashboard.php" class="active">Overview</a>
-            <a href="students.php">Students</a>
-            <a href="manage_courses.php">Course catalogue</a>
-            <a href="registrations.php">Registrations</a>
-            <a href="../api/logout.php" class="logout">Logout</a>
-        </nav>
-    </header>
+<body class="has-sidebar">
+    <header class="navbar"><h1>GREENFIELD INSTITUTE ADMIN PANEL</h1></header>
 
-    <main class="container">
-        <h2>Welcome, <span class="user-name"><?= htmlspecialchars($admin['full_name']) ?></span></h2>
+    <aside class="sidebar">
+        <nav class="sidebar__nav">
+            <a href="dashboard.php" class="active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Overview
+            </a>
+            <a href="students.php">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Students
+            </a>
+            <a href="manage_courses.php">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                Course catalogue
+            </a>
+            <a href="registrations.php">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Registrations
+            </a>
+        </nav>
+        <div class="sidebar__footer">
+            <a href="../api/logout.php" class="logout">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+            </a>
+        </div>
+    </aside>
+
+    <main class="main">
+      <div class="container">
+        <h2>Welcome back, <span class="user-name"><?= htmlspecialchars($admin['full_name']) ?></span></h2>
         <p style="color:var(--text-muted); margin-top:0;">
             Operational view of the Greenfield Institute system.
         </p>
@@ -73,6 +92,7 @@ $admin = require_admin();
             </div>
             <div id="capacityList" class="capacity-list"></div>
         </section>
+      </div>
     </main>
 
     <script src="../assets/js/api.js"></script>
