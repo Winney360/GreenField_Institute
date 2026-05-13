@@ -21,7 +21,7 @@ $profile = $stmt->fetch() ?: [];
 
 // --- Current enrolments (approved + pending) + status -----------
 $stmt = $pdo->prepare(
-    'SELECT c.course_id, c.course_code, c.title, c.instructor, c.credits,
+    'SELECT c.course_id, c.course_code, c.title, c.instructor,
             r.status
        FROM registrations r
        JOIN courses c ON c.course_id = r.course_id
@@ -34,9 +34,8 @@ $currentCourses = $stmt->fetchAll();
 
 // Stat totals — count only confirmed (approved) enrolments.
 $stmt = $pdo->prepare(
-    'SELECT COUNT(*) AS cnt, COALESCE(SUM(c.credits), 0) AS credits
+    'SELECT COUNT(*) AS cnt
        FROM registrations r
-       JOIN courses c ON c.course_id = r.course_id
       WHERE r.user_id = ? AND r.status = "approved"'
 );
 $stmt->execute([$uid]);
@@ -56,7 +55,7 @@ $profileCompletion = (int)round(($filled / count($optionalFields)) * 100);
 $dept = $profile['department'] ?? null;
 $params = [$uid];
 $sql = 'SELECT c.course_id, c.course_code, c.title, c.department,
-               c.instructor, c.credits, c.capacity,
+               c.instructor, c.capacity,
                (SELECT COUNT(*) FROM registrations r2
                   WHERE r2.course_id = c.course_id
                     AND r2.status IN ("approved","pending")) AS enrolled
@@ -88,7 +87,6 @@ json_response([
     'ok'    => true,
     'stats' => [
         'enrolled_count'     => (int)$totals['cnt'],
-        'total_credits'      => (int)$totals['credits'],
         'profile_completion' => $profileCompletion,
     ],
     'current_courses'    => $currentCourses,

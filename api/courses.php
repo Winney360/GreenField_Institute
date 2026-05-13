@@ -10,9 +10,10 @@ $department = trim($_GET['department'] ?? '');
 
 $sql = '
     SELECT c.course_id, c.course_code, c.title, c.description, c.instructor,
-           c.credits, c.capacity, c.department,
+           c.capacity, c.department,
            (SELECT COUNT(*) FROM registrations r
-              WHERE r.course_id = c.course_id AND r.status = "active") AS enrolled
+              WHERE r.course_id = c.course_id
+                AND r.status IN ("approved","pending")) AS enrolled
       FROM courses c
      WHERE 1=1';
 $params = [];

@@ -15,7 +15,7 @@ require_admin();
         <h1>Greenfield Admin</h1>
         <nav>
             <a href="dashboard.php">Overview</a>
-            <a href="manage_courses.php" class="active">Courses</a>
+            <a href="manage_courses.php" class="active">Course catalogue</a>
             <a href="registrations.php">Registrations</a>
             <a href="../api/logout.php" class="logout">Logout</a>
         </nav>
@@ -23,6 +23,7 @@ require_admin();
 
     <main class="container">
         <h2>Course catalogue</h2>
+        <p style="color:var(--text-muted); margin-top:0;">The master list of courses Greenfield Institute offers. Create, edit, or remove courses below.</p>
         <div class="toolbar" style="justify-content:flex-end;">
             <button id="addBtn">+ New course</button>
             <button id="importBtn" class="btn-secondary">Import sample XML</button>
@@ -35,7 +36,7 @@ require_admin();
             <thead>
                 <tr>
                     <th>Code</th><th>Title</th><th>Department</th>
-                    <th>Instructor</th><th>Credits</th><th>Capacity</th><th></th>
+                    <th>Instructor</th><th>Capacity</th><th></th>
                 </tr>
             </thead>
             <tbody id="rows"></tbody>
@@ -69,11 +70,7 @@ require_admin();
                         <label>Department</label>
                         <input id="department" required maxlength="80" />
                     </div>
-                    <div style="width:90px">
-                        <label>Credits</label>
-                        <input id="credits" type="number" min="1" max="6" value="3" required />
-                    </div>
-                    <div style="width:110px">
+                    <div style="width:120px">
                         <label>Capacity</label>
                         <input id="capacity" type="number" min="1" max="1000" value="30" required />
                     </div>
@@ -101,7 +98,6 @@ require_admin();
                     <td>${escapeHtml(c.title)}</td>
                     <td>${escapeHtml(c.department)}</td>
                     <td>${escapeHtml(c.instructor)}</td>
-                    <td>${c.credits}</td>
                     <td>${c.enrolled}/${c.capacity}</td>
                     <td>
                         <button class="btn-secondary" data-edit='${JSON.stringify(c)}'>Edit</button>
@@ -123,7 +119,7 @@ require_admin();
         }
         function openEdit(c) {
             document.getElementById('modalTitle').textContent = 'Edit course';
-            for (const k of ['course_id','course_code','title','description','instructor','department','credits','capacity']) {
+            for (const k of ['course_id','course_code','title','description','instructor','department','capacity']) {
                 document.getElementById(k).value = c[k] ?? '';
             }
             modal.classList.add('active');
@@ -145,7 +141,6 @@ require_admin();
                 description: document.getElementById('description').value.trim(),
                 instructor:  document.getElementById('instructor').value.trim(),
                 department:  document.getElementById('department').value.trim(),
-                credits:     Number(document.getElementById('credits').value),
                 capacity:    Number(document.getElementById('capacity').value),
             };
             const res = await api.post('../api/admin_courses.php', payload);

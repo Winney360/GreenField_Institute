@@ -20,10 +20,10 @@ if ($xml === false) {
 
 $pdo = db();
 $stmt = $pdo->prepare(
-    'INSERT INTO courses (course_code, title, description, instructor, credits, capacity, department)
-     VALUES (:code, :title, :desc, :inst, :cred, :cap, :dept)
+    'INSERT INTO courses (course_code, title, description, instructor, capacity, department)
+     VALUES (:code, :title, :desc, :inst, :cap, :dept)
      ON DUPLICATE KEY UPDATE title=VALUES(title), description=VALUES(description),
-                              instructor=VALUES(instructor), credits=VALUES(credits),
+                              instructor=VALUES(instructor),
                               capacity=VALUES(capacity), department=VALUES(department)'
 );
 
@@ -34,7 +34,6 @@ foreach ($xml->course as $c) {
         ':title' => (string)$c->title,
         ':desc'  => (string)$c->description,
         ':inst'  => (string)$c->instructor,
-        ':cred'  => (int)$c->credits,
         ':cap'   => (int)$c->capacity,
         ':dept'  => (string)$c->department,
     ]);

@@ -175,7 +175,6 @@ body {
     font-weight: 600;
 }
 .course-list__item .title { font-size: 0.95rem; color: var(--text); margin-top: 0.1rem; }
-.course-list__item .credits { color: var(--color-primary); font-weight: 600; font-size: 0.85rem; }
 .course-list__empty {
     padding: 1rem;
     color: var(--text-muted);

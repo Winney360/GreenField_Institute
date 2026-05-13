@@ -6,7 +6,7 @@ require_once __DIR__ . '/../includes/db.php';
 
 $stmt = db()->query('
     SELECT course_id, course_code, title, description, instructor,
-           credits, capacity, department
+           capacity, department
       FROM courses
      ORDER BY department, course_code
 ');
@@ -30,7 +30,6 @@ foreach ($rows as $r) {
         $el->appendChild($dom->createTextNode((string)$r[$field]));
         $node->appendChild($el);
     }
-    $node->appendChild($dom->createElement('credits',  (string)$r['credits']));
     $node->appendChild($dom->createElement('capacity', (string)$r['capacity']));
 
     $root->appendChild($node);

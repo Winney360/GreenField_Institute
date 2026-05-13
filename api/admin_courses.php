@@ -18,14 +18,13 @@ switch ($action) {
         $fields = validate_course_payload($body);
         $stmt = $pdo->prepare(
             'INSERT INTO courses
-                (course_code, title, description, instructor, credits, capacity, department)
-             VALUES (?, ?, ?, ?, ?, ?, ?)'
+                (course_code, title, description, instructor, capacity, department)
+             VALUES (?, ?, ?, ?, ?, ?)'
         );
         try {
             $stmt->execute([
                 $fields['course_code'], $fields['title'], $fields['description'],
-                $fields['instructor'],  $fields['credits'], $fields['capacity'],
-                $fields['department']
+                $fields['instructor'],  $fields['capacity'], $fields['department']
             ]);
         } catch (PDOException $e) {
             if ($e->getCode() === '23000') {
@@ -44,12 +43,12 @@ switch ($action) {
         $fields = validate_course_payload($body);
         $stmt = $pdo->prepare(
             'UPDATE courses SET course_code=?, title=?, description=?, instructor=?,
-                                credits=?, capacity=?, department=?
+                                capacity=?, department=?
               WHERE course_id=?'
         );
         $stmt->execute([
             $fields['course_code'], $fields['title'], $fields['description'],
-            $fields['instructor'],  $fields['credits'], $fields['capacity'],
+            $fields['instructor'],  $fields['capacity'],
             $fields['department'],  $course_id
         ]);
         json_response(['ok' => true]);
@@ -70,21 +69,17 @@ function validate_course_payload(array $b): array {
     $instr = trim($b['instructor'] ?? '');
     $dept  = trim($b['department'] ?? '');
     $desc  = trim($b['description'] ?? '');
-    $cred  = (int)($b['credits'] ?? 0);
     $cap   = (int)($b['capacity'] ?? 0);
 
     if ($code === '' || $title === '' || $instr === '' || $dept === '') {
         json_response(['ok' => false, 'error' => 'Code, title, instructor and department are required.'], 422);
-    }
-    if ($cred < 1 || $cred > 6) {
-        json_response(['ok' => false, 'error' => 'Credits must be between 1 and 6.'], 422);
     }
     if ($cap < 1 || $cap > 1000) {
         json_response(['ok' => false, 'error' => 'Capacity must be between 1 and 1000.'], 422);
     }
     return [
         'course_code' => $code, 'title' => $title, 'description' => $desc,
-        'instructor'  => $instr,'credits' => $cred, 'capacity'   => $cap,
+        'instructor'  => $instr,'capacity' => $cap,
         'department'  => $dept,
     ];
 }

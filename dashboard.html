@@ -25,10 +25,6 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                 My courses
             </a>
-            <a href="api/courses_xml.php" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                Course catalogue
-            </a>
             <a href="profile.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Profile
@@ -67,12 +63,7 @@
                 <div class="stat-card">
                     <div class="stat-label">Enrolled courses</div>
                     <div class="stat-value" id="statCourses">0</div>
-                    <div class="stat-sub">Active this semester</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Total credits</div>
-                    <div class="stat-value" id="statCredits">0</div>
-                    <div class="stat-sub">Across all enrolments</div>
+                    <div class="stat-sub">Approved this semester</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Profile completion</div>
@@ -119,7 +110,6 @@
 
             // Stats
             document.getElementById('statCourses').textContent = data.stats.enrolled_count;
-            document.getElementById('statCredits').textContent = data.stats.total_credits;
             document.getElementById('statProfile').textContent = data.stats.profile_completion;
 
             // Profile nag
@@ -142,7 +132,7 @@
                             <div class="code">${escapeHtml(c.course_code)}</div>
                             <div class="title">${escapeHtml(c.title)} · ${escapeHtml(c.instructor)}</div>
                         </div>
-                        <div class="credits">${c.credits} cr</div>
+                        <span class="status-pill status-${escapeHtml(c.status)}">${escapeHtml(c.status)}</span>
                     </div>`).join('');
             }
 
@@ -158,7 +148,6 @@
                         <h3>${escapeHtml(c.title)}</h3>
                         <div class="meta">
                             <span>${escapeHtml(c.instructor)}</span>
-                            <span>${c.credits} credits</span>
                             <span>${c.enrolled}/${c.capacity} enrolled</span>
                         </div>
                         <div class="actions">
