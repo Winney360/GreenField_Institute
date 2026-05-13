@@ -71,22 +71,22 @@
                     </p>
                 </div>
 
-                <!-- ============ SIGNUP VIEW ============ -->
+                <!-- ============ SIGNUP VIEW (account activation) ============ -->
                 <div class="auth-view auth-view--signup">
                     <div class="auth-welcome">
-                        <h1>CREATE ACCOUNT</h1>
-                        <p>Create a student account to enrol in courses at Greenfield Institute.</p>
+                        <h1>ACTIVATE ACCOUNT</h1>
+                        <p>Use the school email and registration number you were given on admission.</p>
                     </div>
 
                     <form id="signupForm" novalidate>
                         <div class="auth-field">
-                            <label for="signupName">Full Name</label>
-                            <input type="text" id="signupName" name="name" required maxlength="120" />
+                            <label for="signupRegNum">Registration Number</label>
+                            <input type="text" id="signupRegNum" name="registration_number" required maxlength="20" />
                             <svg class="auth-field__icon" viewBox="0 0 24 24" fill="none"
                                  stroke="currentColor" stroke-width="2"
                                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <circle cx="12" cy="8" r="4"/>
-                                <path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
+                                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                <path d="M7 8h10M7 12h10M7 16h6"/>
                             </svg>
                         </div>
 
@@ -120,11 +120,11 @@
                             </button>
                         </div>
 
-                        <button type="submit" class="auth-btn">Sign Up</button>
+                        <button type="submit" class="auth-btn">Activate</button>
                     </form>
 
                     <p class="auth-card__switch">
-                        Already have an account? <a href="#login" data-switch-to="login">Login</a>
+                        Already activated? <a href="#login" data-switch-to="login">Login</a>
                     </p>
                 </div>
 

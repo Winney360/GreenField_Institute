@@ -61,7 +61,7 @@
 
             <div class="field">
                 <label for="pRegNum">Registration number</label>
-                <input id="pRegNum" type="text" maxlength="20" placeholder="e.g. GF2025-001" />
+                <input id="pRegNum" type="text" disabled />
             </div>
 
             <div class="field" style="display:flex; gap:0.75rem;">
@@ -122,12 +122,11 @@
             e.preventDefault();
             btn.disabled = true; btn.textContent = 'Saving…';
             const res = await api.post('api/profile.php', {
-                full_name:           document.getElementById('pName').value.trim(),
-                registration_number: document.getElementById('pRegNum').value.trim(),
-                year_of_birth:       document.getElementById('pYob').value,
-                gender:              document.getElementById('pGender').value,
-                department:          document.getElementById('pDept').value.trim(),
-                programme:           document.getElementById('pProg').value.trim(),
+                full_name:     document.getElementById('pName').value.trim(),
+                year_of_birth: document.getElementById('pYob').value,
+                gender:        document.getElementById('pGender').value,
+                department:    document.getElementById('pDept').value.trim(),
+                programme:     document.getElementById('pProg').value.trim(),
             });
             if (res.ok) flash('msg', 'Profile updated.', 'success');
             else        flash('msg', res.error || 'Save failed.', 'error');

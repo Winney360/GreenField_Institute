@@ -15,6 +15,7 @@ require_admin();
         <h1>Greenfield Admin</h1>
         <nav>
             <a href="dashboard.php">Overview</a>
+            <a href="students.php">Students</a>
             <a href="manage_courses.php" class="active">Course catalogue</a>
             <a href="registrations.php">Registrations</a>
             <a href="../api/logout.php" class="logout">Logout</a>

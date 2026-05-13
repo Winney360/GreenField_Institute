@@ -78,17 +78,17 @@
         const btn = form.querySelector('button[type="submit"]');
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            btn.disabled = true; btn.textContent = 'Creating…';
+            btn.disabled = true; btn.textContent = 'Activating…';
             const res = await api.post('api/register.php', {
-                full_name: form.name.value.trim(),
-                email:     form.email.value.trim(),
-                password:  form.password.value
+                email:               form.email.value.trim(),
+                registration_number: form.registration_number.value.trim(),
+                password:            form.password.value
             });
             if (res.ok) {
                 window.location.href = res.redirect;
             } else {
-                flash('msg', res.error || 'Registration failed.', 'error');
-                btn.disabled = false; btn.textContent = 'Sign Up';
+                flash('msg', res.error || 'Activation failed.', 'error');
+                btn.disabled = false; btn.textContent = 'Activate';
             }
         });
     }
