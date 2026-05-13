@@ -689,70 +689,98 @@ body {
 .is-going-to-signup .auth-card__form,
 .is-going-to-login  .auth-card__form { animation: form-swap 3500ms var(--auth-ease) both; }
 
-/* --- AUTH PAGE — MOBILE LAYOUT ( ≤ 768px ) ------------------
-   On phones/tablets the diagonal split collapses:
-     • hero image fills the whole viewport with a blur + dark overlay
-     • the form sits in a centered frosted-glass card on top
-     • the dark/hero side-swap animations are disabled (no diagonal
-       to animate); the form's slide-down/up still plays.
-*/
-@media (max-width: 768px) {
+/* --- AUTH PAGE — MOBILE & TABLET LAYOUT ( ≤ 1199px ) ----------
+   Covers all phones and tablets (in any orientation, including iPad
+   Pro in landscape at 1194px). Desktop split kicks in at 1200px+.
 
-    /* Dark panel: drop the diagonal, become a full-bleed image holder. */
+   Layout becomes a simple vertical stack:
+     ┌──────────────┐
+     │     IMAGE    │  ← clean hero (no blur), 80% of viewport height
+     ├──────────────┤
+     │  WELCOME +   │  ← form scrolls below the image
+     │  FORM        │     in normal flow
+     └──────────────┘
+*/
+@media (max-width: 1199px) {
+
+    /* Allow the page to scroll vertically — the desktop layout is locked
+       to 100vh with overflow:hidden, which breaks the stacked layout. */
+    body.auth-page {
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
+    .auth-card {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* IMAGE BLOCK — sits at the top, fixed 40vh tall, no diagonal, no blur. */
     .auth-card__dark,
     .mode-login  .auth-card__dark,
     .mode-signup .auth-card__dark {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: 80vh;
         clip-path: none;
-        inset: 0;
+        flex-shrink: 0;
     }
-
-    /* Hero image: fill the viewport, blur it, dim it for text contrast.
-       transform: scale(1.05) hides the soft edges that blur creates. */
     .auth-card__hero,
     .mode-login  .auth-card__hero,
     .mode-signup .auth-card__hero {
+        position: absolute;
+        top: 0;
         left: 0;
-        width: 100vw;
-        height: 100vh;
-        filter: blur(6px) brightness(0.45);
-        transform: scale(1.05);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: none;
+        transform: none;
     }
 
-    /* Form panel sits centered over the image, no side-padding gymnastics. */
+    /* FORM BLOCK — sits below the image in normal flow. */
     .auth-card__form,
     .mode-login  .auth-card__form,
     .mode-signup .auth-card__form {
+        position: relative;
+        inset: auto;
+        flex: 1;
         justify-content: center;
         align-items: center;
-        padding: 1.5rem;
-        z-index: 2;
+        padding: 2rem 1.5rem;
     }
 
-    /* The form-inner becomes the visible "card" — frosted glass effect.
-       backdrop-filter blurs whatever's behind the card (the image).
-       The translucent white background gives form text good contrast. */
+    /* No card wrapping — form content lays out directly on the page bg. */
     .auth-card__form-inner {
         width: 100%;
         max-width: 380px;
-        background: rgba(255, 255, 255, 0.94);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        padding: 2rem 1.5rem;
-        border-radius: 16px;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     /* Tighter spacing on small screens. */
     .auth-welcome { margin-bottom: 1.25rem; }
-    .auth-welcome h1 { font-size: 1.6rem; letter-spacing: 1px; }
+    .auth-welcome h1 { font-size: 1.7rem; letter-spacing: 1px; }
     .mode-signup .auth-welcome { margin-top: 0; }
 
-    /* Disable the diagonal/hero animations on mobile — they'd flicker the
-       image since there's no diagonal anymore. The form swap still plays. */
+    /* Disable all the desktop transitions on mobile — they were built
+       around the diagonal split, which no longer exists here. The mode
+       swap happens instantly. */
     .is-going-to-signup .auth-card__dark,
     .is-going-to-signup .auth-card__hero,
     .is-going-to-login  .auth-card__dark,
-    .is-going-to-login  .auth-card__hero {
+    .is-going-to-login  .auth-card__hero,
+    .is-going-to-signup .auth-card__form,
+    .is-going-to-login  .auth-card__form {
         animation: none;
     }
 }
