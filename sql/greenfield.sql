@@ -13,8 +13,17 @@
 --   database manually first (CREATE DATABASE greenfield_db; in the
 --   SQL tab, or use the Databases tab).
 --
---   After import, run sql/seed_passwords.php once so the seeded
---   accounts (admin + alice + brian) can log in with `password123`.
+--   After import, the seeded accounts (admin + alice + brian) can log
+--   in immediately with password `password123` — real bcrypt hashes are
+--   baked into the seed below.
+--
+-- HOW TO ADD A NEW ADMIN (no signup page for admins — created directly):
+--   1. Generate a bcrypt hash for your chosen password by running:
+--        & "C:\xampp\php\php.exe" -r "echo password_hash('yourpw', PASSWORD_DEFAULT);"
+--      (Or use any online bcrypt generator with cost = 10.)
+--   2. In phpMyAdmin → greenfield_db → SQL tab, run:
+--        INSERT INTO users (full_name, email, password_hash, role)
+--        VALUES ('Their Name', 'their@email.com', '<paste-hash-here>', 'admin');
 
 -- ----------------------------------------------------------------------
 -- Users (students + administrators) — single table, role column
@@ -87,16 +96,16 @@ CREATE TABLE registrations (
 -- ----------------------------------------------------------------------
 -- Seed: one administrator + two pre-activated students for demos.
 -- Default password for every seeded account is: password123
--- The placeholder hashes here are overwritten by sql/seed_passwords.php
--- with real bcrypt hashes — that script must be run once after import.
+-- The same bcrypt hash is reused across all three since bcrypt verifies
+-- against the password, not the hash bytes — fine for demo seed data.
 -- ----------------------------------------------------------------------
 INSERT INTO users (full_name, registration_number, email, password_hash, role) VALUES
 ('System Administrator', NULL,           'admin@greenfield.edu',
- '$2y$10$E8m3aD3o4cV2yJtGmqz0cuJjW/2T9G8h0P5Yw8NfL3J2xY4nQwG.G', 'admin'),
+ '$2y$10$o1c2Mf2blVAjyAEA97gG6u.6AVvNhMreLf98U97Dl5x3iiP2wta0C', 'admin'),
 ('Alice Mwangi',         'GF2024-001',   'alice@student.greenfield.edu',
- '$2y$10$E8m3aD3o4cV2yJtGmqz0cuJjW/2T9G8h0P5Yw8NfL3J2xY4nQwG.G', 'student'),
+ '$2y$10$o1c2Mf2blVAjyAEA97gG6u.6AVvNhMreLf98U97Dl5x3iiP2wta0C', 'student'),
 ('Brian Otieno',         'GF2024-002',   'brian@student.greenfield.edu',
- '$2y$10$E8m3aD3o4cV2yJtGmqz0cuJjW/2T9G8h0P5Yw8NfL3J2xY4nQwG.G', 'student');
+ '$2y$10$o1c2Mf2blVAjyAEA97gG6u.6AVvNhMreLf98U97Dl5x3iiP2wta0C', 'student');
 
 -- Seed: a small course catalogue across a few departments.
 INSERT INTO courses (course_code, title, description, instructor, capacity, department) VALUES

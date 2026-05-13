@@ -17,20 +17,13 @@ HTML/CSS/JS front-end · PHP business logic · MySQL database · XML import/expo
 2. **Configure** — edit [includes/config.php](includes/config.php) so the
    `DB_USER` / `DB_PASS` values match your local MySQL.
 
-3. **Set seed passwords** — the seed SQL inserts placeholder hashes; run
-   this once to replace them with a real bcrypt hash of `password123`:
-
-   ```bash
-   php sql/seed_passwords.php
-   ```
-
-4. **Serve** — from the project directory:
+3. **Serve** — from the project directory:
 
    ```bash
    php -S localhost:8000
    ```
 
-5. Open <http://localhost:8000/>.
+4. Open <http://localhost:8000/>.
 
 ## Default accounts
 
@@ -40,9 +33,25 @@ HTML/CSS/JS front-end · PHP business logic · MySQL database · XML import/expo
 | Student       | `alice@student.greenfield.edu`     | `password123` |
 | Student       | `brian@student.greenfield.edu`     | `password123` |
 
-> The `sql/seed_passwords.php` step (above) is what makes these accounts
-> actually log in — without running it, the SQL seed hashes are placeholders
-> and the login form will reject every credential.
+These accounts are seeded by `sql/greenfield.sql` with working bcrypt hashes — no extra setup step is needed.
+
+## Adding another admin
+
+Admins are created **only** by direct SQL — there's no signup flow for them. To add one:
+
+1. Generate a bcrypt hash for the chosen password:
+   ```bash
+   php -r "echo password_hash('yourpassword', PASSWORD_DEFAULT);"
+   ```
+2. In phpMyAdmin → `greenfield_db` → SQL tab, run:
+   ```sql
+   INSERT INTO users (full_name, email, password_hash, role)
+   VALUES ('Admin Name', 'admin@example.com', '<paste-hash-here>', 'admin');
+   ```
+
+## Adding a student
+
+Admins admit students via the **Students** page in the admin console — that pre-registers them. The student then activates their account at signup using their email + registration number.
 
 ## Project layout
 
