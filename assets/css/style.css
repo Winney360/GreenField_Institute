@@ -73,6 +73,16 @@ body {
     color: var(--color-primary);
     text-transform: uppercase;
     letter-spacing: 2.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+/* Brand logo (the Gi monogram) sits to the left of the wordmark. */
+.navbar__logo {
+    height: 44px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
 }
 /* "ADMIN PANEL" suffix in the admin navbar — deep teal that pairs with the
    mint brand (analogous on the colour wheel). Reads as a sub-label without
@@ -678,6 +688,74 @@ body {
 .is-going-to-login  .auth-card__hero { animation: hero-s2l 3500ms var(--auth-ease) both; }
 .is-going-to-signup .auth-card__form,
 .is-going-to-login  .auth-card__form { animation: form-swap 3500ms var(--auth-ease) both; }
+
+/* --- AUTH PAGE — MOBILE LAYOUT ( ≤ 768px ) ------------------
+   On phones/tablets the diagonal split collapses:
+     • hero image fills the whole viewport with a blur + dark overlay
+     • the form sits in a centered frosted-glass card on top
+     • the dark/hero side-swap animations are disabled (no diagonal
+       to animate); the form's slide-down/up still plays.
+*/
+@media (max-width: 768px) {
+
+    /* Dark panel: drop the diagonal, become a full-bleed image holder. */
+    .auth-card__dark,
+    .mode-login  .auth-card__dark,
+    .mode-signup .auth-card__dark {
+        clip-path: none;
+        inset: 0;
+    }
+
+    /* Hero image: fill the viewport, blur it, dim it for text contrast.
+       transform: scale(1.05) hides the soft edges that blur creates. */
+    .auth-card__hero,
+    .mode-login  .auth-card__hero,
+    .mode-signup .auth-card__hero {
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        filter: blur(6px) brightness(0.45);
+        transform: scale(1.05);
+    }
+
+    /* Form panel sits centered over the image, no side-padding gymnastics. */
+    .auth-card__form,
+    .mode-login  .auth-card__form,
+    .mode-signup .auth-card__form {
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem;
+        z-index: 2;
+    }
+
+    /* The form-inner becomes the visible "card" — frosted glass effect.
+       backdrop-filter blurs whatever's behind the card (the image).
+       The translucent white background gives form text good contrast. */
+    .auth-card__form-inner {
+        width: 100%;
+        max-width: 380px;
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 2rem 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Tighter spacing on small screens. */
+    .auth-welcome { margin-bottom: 1.25rem; }
+    .auth-welcome h1 { font-size: 1.6rem; letter-spacing: 1px; }
+    .mode-signup .auth-welcome { margin-top: 0; }
+
+    /* Disable the diagonal/hero animations on mobile — they'd flicker the
+       image since there's no diagonal anymore. The form swap still plays. */
+    .is-going-to-signup .auth-card__dark,
+    .is-going-to-signup .auth-card__hero,
+    .is-going-to-login  .auth-card__dark,
+    .is-going-to-login  .auth-card__hero {
+        animation: none;
+    }
+}
 
 
 /* --- Forms --------------------------------------------------- */
