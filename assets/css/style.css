@@ -20,7 +20,7 @@
 
     --shadow:     0 2px 8px rgba(0, 0, 0, 0.08);
     --radius:     8px;
-    --navbar-h:   3.5rem;  /* fixed top navbar height — used by sidebar offset */
+    --navbar-h:   4.5rem;  /* fixed top navbar height — used by sidebar offset */
 
     /* --- Backwards-compat aliases for older pages -------------- */
     /* Existing rules still reference --green-700 etc., so map them
@@ -58,7 +58,7 @@ body {
     z-index: 50;
     background: var(--surface);
     color: var(--color-primary);
-    padding: 0.85rem 1.5rem;
+    padding: 1.1rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -67,12 +67,12 @@ body {
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
 }
 .navbar h1 {
-    font-size: 1.1rem;
+    font-size: 1.6rem;
     margin: 0;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--color-primary);
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 2.5px;
 }
 .navbar nav a {
     color: var(--color-primary);
@@ -96,6 +96,112 @@ body {
 
 /* --- Inline accent for a user's name (dashboard "Welcome, X") --- */
 .user-name { color: var(--color-primary); font-weight: 700; }
+
+/* --- Dashboard quick-stats strip ----------------------------- */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0 1.5rem;
+}
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1rem 1.25rem;
+}
+.stat-card .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-top: 0.4rem;
+    line-height: 1;
+}
+.stat-card .stat-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+}
+
+/* --- Dashboard section blocks (current courses, recommendations) ---- */
+.dash-section { margin-top: 2rem; }
+.dash-section__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+.dash-section__header h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 1.05rem;
+}
+.dash-section__header a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.dash-section__header a:hover { text-decoration: underline; }
+
+/* Compact list of current courses */
+.course-list {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.course-list__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+}
+.course-list__item:last-child { border-bottom: none; }
+.course-list__item .code {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.course-list__item .title { font-size: 0.95rem; color: var(--text); margin-top: 0.1rem; }
+.course-list__item .credits { color: var(--color-primary); font-weight: 600; font-size: 0.85rem; }
+.course-list__empty {
+    padding: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Profile-completion banner — shown only when incomplete */
+.profile-nag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: rgba(45, 212, 155, 0.08);
+    border: 1px solid rgba(45, 212, 155, 0.4);
+    border-radius: var(--radius);
+    padding: 0.85rem 1.1rem;
+    margin: 1rem 0 0.5rem;
+}
+.profile-nag p { margin: 0; color: var(--text); font-size: 0.92rem; }
+.profile-nag a {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.profile-nag a:hover { text-decoration: underline; }
 
 /* --- Side navigation (student pages) -------------------------
    Fixed full-height rail on the left. Mirrors the navbar concept but

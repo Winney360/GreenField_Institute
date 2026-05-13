@@ -51,40 +51,120 @@
     <main class="main">
         <div class="container">
             <h2>Welcome back, <span class="user-name" id="userName">student</span></h2>
-            <p style="color:var(--text-muted);">
-                From here you can browse the course catalogue, enroll in new courses,
-                or review the courses you are already registered in.
+            <p style="color:var(--text-muted); margin-top:0;">
+                Here's a snapshot of where you are right now.
             </p>
 
-            <div class="course-grid" style="margin-top:1.25rem;">
-                <div class="course-card">
-                    <h3>Browse all available courses</h3>
-                    <p>See every course on offer this semester, search by keyword and filter by department.</p>
-                    <a class="btn" href="courses.html">Open catalogue</a>
-                </div>
-                <div class="course-card">
-                    <h3>My registrations</h3>
-                    <p>View your current enrollments, drop a course, and check registration history.</p>
-                    <a class="btn" href="my-courses.html">View my courses</a>
-                </div>
-                <div class="course-card">
-                    <h3>Course catalogue (XML)</h3>
-                    <p>The same catalogue exposed as XML for programmatic access.</p>
-                    <a class="btn btn-secondary" href="api/courses_xml.php" target="_blank">Open XML feed</a>
-                </div>
+            <!-- Profile completion banner — JS shows it only when incomplete -->
+            <div id="profileNag" class="profile-nag" hidden>
+                <p>Your profile is <strong><span id="nagPercent">0</span>% complete.</strong>
+                   Fill it in to get personalized course recommendations.</p>
+                <a href="profile.html">Open profile →</a>
             </div>
+
+            <!-- Quick stats -->
+            <section class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Enrolled courses</div>
+                    <div class="stat-value" id="statCourses">0</div>
+                    <div class="stat-sub">Active this semester</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total credits</div>
+                    <div class="stat-value" id="statCredits">0</div>
+                    <div class="stat-sub">Across all enrolments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Profile completion</div>
+                    <div class="stat-value"><span id="statProfile">0</span>%</div>
+                    <div class="stat-sub">Of optional fields filled</div>
+                </div>
+            </section>
+
+            <!-- Current courses -->
+            <section class="dash-section">
+                <div class="dash-section__header">
+                    <h3>My current courses</h3>
+                    <a href="my-courses.html">See all →</a>
+                </div>
+                <div id="currentCourses" class="course-list"></div>
+            </section>
+
+            <!-- Recommendations -->
+            <section class="dash-section">
+                <div class="dash-section__header">
+                    <h3>Recommended for you</h3>
+                    <a href="courses.html">Browse catalogue →</a>
+                </div>
+                <div id="recommendations" class="course-grid"></div>
+            </section>
         </div>
     </main>
 
     <script src="assets/js/api.js"></script>
     <script>
         (async () => {
+            // Redirect admins to their own dashboard.
             const me = await api.get('api/me.php');
-            if (me.ok) {
-                document.getElementById('userName').textContent = me.user.full_name;
-                if (me.user.role === 'admin') {
-                    window.location.href = 'admin/dashboard.php';
-                }
+            if (me.ok && me.user.role === 'admin') {
+                window.location.href = 'admin/dashboard.php';
+                return;
+            }
+
+            const data = await api.get('api/dashboard.php');
+            if (!data.ok) return;
+
+            // Greeting
+            document.getElementById('userName').textContent = data.user_name || 'student';
+
+            // Stats
+            document.getElementById('statCourses').textContent = data.stats.enrolled_count;
+            document.getElementById('statCredits').textContent = data.stats.total_credits;
+            document.getElementById('statProfile').textContent = data.stats.profile_completion;
+
+            // Profile nag
+            if (data.profile_incomplete) {
+                document.getElementById('nagPercent').textContent = data.stats.profile_completion;
+                document.getElementById('profileNag').hidden = false;
+            }
+
+            // Current courses list
+            const cc = document.getElementById('currentCourses');
+            if (!data.current_courses.length) {
+                cc.innerHTML = '<div class="course-list__empty">' +
+                    'You\'re not enrolled in any courses yet. ' +
+                    '<a href="courses.html" style="color:var(--color-primary);font-weight:600;">Browse the catalogue</a> to get started.' +
+                    '</div>';
+            } else {
+                cc.innerHTML = data.current_courses.map(c => `
+                    <div class="course-list__item">
+                        <div>
+                            <div class="code">${escapeHtml(c.course_code)}</div>
+                            <div class="title">${escapeHtml(c.title)} · ${escapeHtml(c.instructor)}</div>
+                        </div>
+                        <div class="credits">${c.credits} cr</div>
+                    </div>`).join('');
+            }
+
+            // Recommendations
+            const rec = document.getElementById('recommendations');
+            if (!data.recommendations.length) {
+                rec.innerHTML = '<p style="color:var(--text-muted);">' +
+                    'No new course recommendations right now — either you\'re registered for everything in your department, or they\'re all full.</p>';
+            } else {
+                rec.innerHTML = data.recommendations.map(c => `
+                    <article class="course-card">
+                        <div class="code">${escapeHtml(c.course_code)} · ${escapeHtml(c.department)}</div>
+                        <h3>${escapeHtml(c.title)}</h3>
+                        <div class="meta">
+                            <span>${escapeHtml(c.instructor)}</span>
+                            <span>${c.credits} credits</span>
+                            <span>${c.enrolled}/${c.capacity} enrolled</span>
+                        </div>
+                        <div class="actions">
+                            <a class="btn" href="courses.html">View in catalogue</a>
+                        </div>
+                    </article>`).join('');
             }
         })();
     </script>
