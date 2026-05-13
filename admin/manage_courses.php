@@ -46,7 +46,9 @@ require_admin();
         <p style="color:var(--text-muted); margin-top:0;">The master list of courses Greenfield Institute offers. Create, edit, or remove courses below.</p>
         <div class="toolbar" style="justify-content:flex-end;">
             <button id="addBtn">+ New course</button>
-            <button id="importBtn" class="btn-secondary">Import sample XML</button>
+            <!-- Hidden native file input — triggered by the styled button below. -->
+            <input type="file" id="importFile" accept=".xml,application/xml,text/xml" hidden />
+            <button id="importBtn" class="btn-secondary">Import XML</button>
             <a class="btn btn-secondary" href="../api/courses_xml.php" target="_blank">Export XML</a>
         </div>
 
@@ -176,12 +178,47 @@ require_admin();
             else        { flash('msg', res.error || 'Delete failed.', 'error'); }
         }
 
-        document.getElementById('importBtn').onclick = async () => {
-            if (!confirm('Import courses from data/courses_sample.xml?')) return;
-            const res = await api.post('../api/import_xml.php', {});
-            if (res.ok) { flash('msg', `Imported/updated ${res.imported} courses.`, 'success'); load(); }
-            else        { flash('msg', res.error || 'Import failed.', 'error'); }
-        };
+        // XML import: click → open native file picker → confirm → upload.
+        // We use FormData / fetch directly here because api.js only handles
+        // JSON requests and file uploads need multipart/form-data.
+        const importBtn  = document.getElementById('importBtn');
+        const importFile = document.getElementById('importFile');
+
+        importBtn.onclick = () => importFile.click();
+
+        importFile.addEventListener('change', async () => {
+            const file = importFile.files[0];
+            if (!file) return;
+            if (!confirm(`Import courses from "${file.name}"? Existing courses with matching codes will be updated.`)) {
+                importFile.value = '';  // allow re-selecting the same file later
+                return;
+            }
+
+            const fd = new FormData();
+            fd.append('xml', file);
+
+            importBtn.disabled = true; importBtn.textContent = 'Importing…';
+            try {
+                const r = await fetch('../api/import_xml.php', {
+                    method:  'POST',
+                    body:    fd,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const res = await r.json();
+                if (res.ok) {
+                    flash('msg', `Imported/updated ${res.imported} courses.`, 'success');
+                    load();
+                } else {
+                    flash('msg', res.error || 'Import failed.', 'error');
+                }
+            } catch (e) {
+                flash('msg', 'Upload failed: ' + e.message, 'error');
+            } finally {
+                importBtn.disabled = false;
+                importBtn.textContent = 'Import XML';
+                importFile.value = '';
+            }
+        });
 
         load();
     </script>

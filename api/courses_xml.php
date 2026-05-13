@@ -35,6 +35,8 @@ foreach ($rows as $r) {
     $root->appendChild($node);
 }
 
+// Auto-generate a unique, dated filename so each export saves as its own file.
+$filename = 'greenfield-courses-' . date('Y-m-d-Hi') . '.xml';
 header('Content-Type: application/xml; charset=utf-8');
-header('Content-Disposition: inline; filename="greenfield-courses.xml"');
+header('Content-Disposition: attachment; filename="' . $filename . '"');
 echo $dom->saveXML();
