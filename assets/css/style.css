@@ -15,7 +15,7 @@
     --surface:    #ffffff;  /* cards, modals */
     --text:       #0f1a14;  /* headings, body */
     --text-muted: #5a6661;  /* labels, captions */
-    --border:     #c9d6c2;  /* hairlines, input underlines */
+    --border:     rgba(45, 212, 155, 0.35);  /* thin mint outline on cards, inputs, dividers */
     --slab-bg:    #0f1a14;  /* hero slab fallback if image missing */
 
     --shadow:     0 2px 8px rgba(0, 0, 0, 0.08);
