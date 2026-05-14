@@ -50,10 +50,21 @@
         <h2>Course catalogue</h2>
 
         <div class="toolbar">
-            <input type="search" id="search"     placeholder="Search by code, title or keyword…" />
-            <select id="department">
-                <option value="">All departments</option>
-            </select>
+            <input type="search" id="search" placeholder="Search by code, title or keyword…" />
+            <div class="dropdown" id="department" data-value="">
+                <button type="button" class="dropdown__trigger"
+                        aria-haspopup="listbox" aria-expanded="false">
+                    <span class="dropdown__label">All departments</span>
+                    <svg class="dropdown__chevron" viewBox="0 0 12 8" aria-hidden="true">
+                        <polyline points="2 2 6 6 10 2" fill="none" stroke="currentColor"
+                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <ul class="dropdown__menu" role="listbox" hidden>
+                    <li class="dropdown__option is-selected" role="option"
+                        data-value="" aria-selected="true" tabindex="-1">All departments</li>
+                </ul>
+            </div>
         </div>
 
         <div id="msg"></div>
@@ -63,10 +74,11 @@
 
     <script src="assets/js/api.js"></script>
     <script src="assets/js/nav.js"></script>
+    <script src="assets/js/dropdown.js"></script>
     <script>
         const grid = document.getElementById('grid');
         const search = document.getElementById('search');
-        const dept   = document.getElementById('department');
+        const dept   = Dropdown(document.getElementById('department'));
 
         // Debounced AJAX search — fires the server filter as the user types.
         let timer;
@@ -75,7 +87,7 @@
             timer = setTimeout(load, 200);
         };
         search.addEventListener('input', refresh);
-        dept.addEventListener('change', refresh);
+        dept.addEventListener('change', refresh);   // custom dropdown fires this
 
         async function load() {
             const params = new URLSearchParams();
@@ -94,12 +106,10 @@
             }
 
             // Populate the department dropdown the first time only.
-            if (dept.options.length === 1) {
+            // size === 1 means we still have only the "All departments" row.
+            if (dept.size === 1) {
                 const set = new Set(courses.map(c => c.department));
-                set.forEach(d => {
-                    const o = document.createElement('option'); o.value = d; o.textContent = d;
-                    dept.appendChild(o);
-                });
+                set.forEach(d => dept.addOption(d, d));
             }
 
             grid.innerHTML = courses.map(c => `

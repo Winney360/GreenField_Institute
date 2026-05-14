@@ -51,7 +51,7 @@
             <h2 style="color: var(--color-primary); margin: 0;">Current Registered Units</h2>
         </div>
         <div id="msg"></div>
-        <table id="regTable">
+        <table id="regTable" class="table-stack">
             <thead>
                 <tr>
                     <th>Unit Name</th>
@@ -87,10 +87,10 @@
 
             rowsEl.innerHTML = list.map(r => `
                 <tr>
-                    <td>${escapeHtml(r.title)}</td>
-                    <td>${escapeHtml(r.course_code)}</td>
-                    <td><span class="status-pill status-${escapeHtml(r.status)}">${escapeHtml(r.status)}</span></td>
-                    <td>${r.status !== 'rejected'
+                    <td data-label="Unit Name">${escapeHtml(r.title)}</td>
+                    <td data-label="Unit Code">${escapeHtml(r.course_code)}</td>
+                    <td data-label="Status"><span class="status-pill status-${escapeHtml(r.status)}">${escapeHtml(r.status)}</span></td>
+                    <td class="cell-action">${r.status !== 'rejected'
                         ? `<button class="btn-danger" data-id="${r.course_id}">Drop</button>`
                         : ''
                     }</td>

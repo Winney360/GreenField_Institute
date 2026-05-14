@@ -446,7 +446,9 @@ body {
 .navbar__hamburger svg { width: 26px; height: 26px; }
 
 /* Click-to-close overlay behind the open sidebar. Element is injected
-   dynamically by nav.js; lives in the DOM but hidden until needed. */
+   dynamically by nav.js; lives in the DOM but hidden until needed.
+   pointer-events: none when closed — otherwise it'd block clicks on the
+   main content even though it's invisible. */
 .sidebar-backdrop {
     display: none;
     position: fixed;
@@ -455,6 +457,7 @@ body {
     background: rgba(0, 0, 0, 0.45);
     z-index: 40;
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.2s ease;
 }
 
@@ -499,9 +502,12 @@ body {
         margin-left: 0;
     }
 
-    /* Backdrop visible when sidebar is open. */
+    /* Backdrop visible only when sidebar is open. */
     .has-sidebar .sidebar-backdrop { display: block; }
-    .has-sidebar.sidebar-open .sidebar-backdrop { opacity: 1; }
+    .has-sidebar.sidebar-open .sidebar-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }
 
 .auth-wrap {
@@ -909,11 +915,173 @@ button:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0
 /* --- Cards & course grid ------------------------------------- */
 .toolbar {
     display: flex; gap: 0.75rem; flex-wrap: wrap;
-    margin-bottom: 1rem;
-    background: var(--surface); padding: 1rem; border-radius: var(--radius);
-    box-shadow: var(--shadow); border: 1px solid var(--border);
+    margin-bottom: 1.25rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
-.toolbar input, .toolbar select { flex: 1 1 180px; }
+
+/* Pill-shaped search + select — thin, modern, look like real search bars. */
+.toolbar input,
+.toolbar input[type="search"],
+.toolbar select {
+    flex: 1 1 200px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 1rem;
+    line-height: 1;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.92rem;
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.toolbar input:focus,
+.toolbar select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(45, 212, 155, 0.15);
+}
+
+/* Custom chevron for the select (default browser arrow is ugly). */
+.toolbar select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%232DD49B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='2 2 6 6 10 2'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+/* Search-type inputs strip their native clear/cancel buttons in
+   WebKit so the pill stays clean. */
+.toolbar input[type="search"]::-webkit-search-cancel-button { display: none; }
+
+/* --- Themed dropdown (replaces <select>) ---------------------
+   Native <select> only lets you style the closed trigger, not the
+   option panel. This component renders a button + listbox we own,
+   so the menu can match the rest of the brand. Behaviour lives in
+   assets/js/dropdown.js. */
+.dropdown { position: relative; }
+.toolbar .dropdown {
+    flex: 1 1 200px;
+    min-width: 0;            /* allow shrinking inside the flex toolbar */
+}
+.dropdown__trigger {
+    /* Mirror .toolbar input/select pill so the two sit on the same
+       baseline with identical height, padding, and border-radius. */
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 2.5rem 0 1rem;
+    line-height: 1;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.92rem;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.dropdown__trigger:hover { background: var(--surface); }
+.dropdown__trigger:focus,
+.dropdown__trigger[aria-expanded="true"] {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(45, 212, 155, 0.15);
+}
+.dropdown__label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.dropdown__chevron {
+    width: 12px;
+    height: 8px;
+    color: var(--color-primary);
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.18s ease;
+    pointer-events: none;
+}
+.dropdown__trigger[aria-expanded="true"] .dropdown__chevron {
+    transform: translateY(-50%) rotate(180deg);
+}
+.dropdown__menu {
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    left: 0;
+    right: 0;
+    z-index: 30;
+    margin: 0;
+    padding: 0.35rem;
+    list-style: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.10);
+    max-height: 260px;
+    overflow-y: auto;
+}
+.dropdown__menu[hidden] { display: none; }
+.dropdown__option {
+    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text);
+    transition: background 0.1s ease, color 0.1s ease;
+}
+.dropdown__option:hover,
+.dropdown__option.is-active {
+    background: rgba(45, 212, 155, 0.10);
+    color: var(--color-primary);
+}
+.dropdown__option.is-selected {
+    background: rgba(45, 212, 155, 0.18);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* Stack only at narrow phone widths.
+   The course-grid stays 2+ columns down to ~600px (minmax(280px,1fr)),
+   so keeping the toolbar side-by-side at tablet/landscape widths makes
+   the search width match the card width below. We only stack when the
+   grid itself collapses to a single column (~≤480px).
+
+   Important: reset flex sizing — in a column flex container, flex-basis
+   maps to HEIGHT, so the desktop's `flex: 1 1 200px` would otherwise
+   make each input 200px TALL. We force flex off and use width: 100%. */
+@media (max-width: 480px) {
+    .toolbar { flex-direction: column; gap: 0.5rem; align-items: stretch; }
+    /* Must include input[type="search"] explicitly — the base rule uses
+       that selector (specificity 0,2,1), so a bare `.toolbar input`
+       override (0,1,1) loses the cascade for the search field and leaves
+       it with `flex: 1 1 200px`. In column mode, that 200px becomes the
+       MAIN-AXIS size (height), and the input balloons. */
+    .toolbar input,
+    .toolbar input[type="search"],
+    .toolbar select {
+        flex: 0 0 auto;
+        width: 100%;
+        height: 40px;
+    }
+    .toolbar .dropdown {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+}
 
 .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
 
@@ -969,6 +1137,60 @@ table th {
 table tr:last-child td { border-bottom: none; }
 table tbody tr:hover { background: rgba(45, 212, 155, 0.05); }
 
+/* --- Responsive tables (card-stack at phone widths) -----------
+   Opt-in via class="table-stack". On phones the table flattens:
+   thead is hidden, each row becomes a card, and each cell pairs
+   its value with the column label pulled from data-label. */
+@media (max-width: 640px) {
+    .table-stack {
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        overflow: visible;
+    }
+    .table-stack thead { display: none; }
+    .table-stack tbody,
+    .table-stack tr,
+    .table-stack td { display: block; width: 100%; }
+    .table-stack tr {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 0.75rem;
+        padding: 0.4rem 1rem;
+    }
+    .table-stack tbody tr:hover { background: var(--surface); }
+    .table-stack td {
+        border-bottom: 1px solid var(--border);
+        padding: 0.6rem 0;
+        font-size: 0.9rem;
+    }
+    .table-stack tr td:last-child { border-bottom: none; }
+    .table-stack td[data-label] {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .table-stack td[data-label]::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--color-primary);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    /* Action cell: hide if empty, otherwise let buttons span full width. */
+    .table-stack td.cell-action:empty { display: none; }
+    .table-stack td.cell-action { padding-top: 0.75rem; }
+    .table-stack td.cell-action .btn-danger,
+    .table-stack td.cell-action button {
+        width: 100%;
+        padding: 0.55rem;
+    }
+}
+
 /* --- Modal --------------------------------------------------- */
 .modal-backdrop {
     position: fixed; inset: 0; background: rgba(0,0,0,0.55);
@@ -987,7 +1209,6 @@ table tbody tr:hover { background: rgba(45, 212, 155, 0.05); }
 /* --- Responsive --------------------------------------------- */
 @media (max-width: 768px) {
     .navbar nav a { margin-left: 0.75rem; font-size: 0.85rem; }
-    .toolbar { flex-direction: column; }
 }
 @media (max-width: 480px) {
     .auth-wrap { margin: 1.5rem 1rem; padding: 1.5rem; }
