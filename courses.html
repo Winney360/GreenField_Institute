@@ -75,6 +75,7 @@
     <script src="assets/js/api.js"></script>
     <script src="assets/js/nav.js"></script>
     <script src="assets/js/dropdown.js"></script>
+    <script src="assets/js/reveal.js"></script>
     <script>
         const grid = document.getElementById('grid');
         const search = document.getElementById('search');
@@ -113,7 +114,7 @@
             }
 
             grid.innerHTML = courses.map(c => `
-                <article class="course-card">
+                <article class="course-card reveal">
                     <div class="code">${escapeHtml(c.course_code)} · ${escapeHtml(c.department)}</div>
                     <h3>${escapeHtml(c.title)}
                         ${c.is_full ? '<span class="badge full">Full</span>'
@@ -131,6 +132,7 @@
                     </div>
                 </article>
             `).join('');
+            window.reveal && window.reveal.scan();
 
             grid.querySelectorAll('button[data-id]').forEach(b => {
                 b.addEventListener('click', () => enroll(b.dataset.id, b));

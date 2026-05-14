@@ -61,13 +61,13 @@ $firstName = explode(' ', $admin['full_name'])[0];
         </p>
 
         <!-- ============ TIER 1 — ACTION ITEMS ============ -->
-        <section class="dash-section">
+        <section class="dash-section reveal">
             <div class="dash-section__header"><h3>Action items</h3></div>
             <div id="actionItems"></div>
         </section>
 
         <!-- ============ TIER 2 — STATS ============ -->
-        <section class="dash-section">
+        <section class="dash-section reveal">
             <div class="dash-section__header"><h3>At a glance</h3></div>
             <div class="stats-row">
                 <div class="stat-card">
@@ -89,7 +89,7 @@ $firstName = explode(' ', $admin['full_name'])[0];
         </section>
 
         <!-- ============ TIER 3 — ACTIVITY FEED ============ -->
-        <section class="dash-section">
+        <section class="dash-section reveal">
             <div class="dash-section__header">
                 <h3>Recent activity</h3>
                 <a href="registrations.php">All registrations →</a>
@@ -98,7 +98,7 @@ $firstName = explode(' ', $admin['full_name'])[0];
         </section>
 
         <!-- ============ TIER 4 — CAPACITY ALERTS ============ -->
-        <section class="dash-section">
+        <section class="dash-section reveal">
             <div class="dash-section__header">
                 <h3>Courses near capacity</h3>
                 <a href="manage_courses.php">Manage catalogue →</a>
@@ -110,6 +110,7 @@ $firstName = explode(' ', $admin['full_name'])[0];
 
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/reveal.js"></script>
     <script>
         function timeAgo(iso) {
             const now = Date.now();

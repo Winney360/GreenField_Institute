@@ -69,7 +69,7 @@ require_admin();
 
         <div id="msg"></div>
 
-        <div class="course-list">
+        <div class="course-list reveal">
             <table class="course-table">
                 <thead>
                     <tr>
@@ -125,6 +125,7 @@ require_admin();
 
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/reveal.js"></script>
     <script>
         const rowsEl = document.getElementById('rows');
         const modal  = document.getElementById('modal');

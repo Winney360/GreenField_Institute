@@ -57,7 +57,7 @@
             </p>
 
             <!-- Profile completion banner — JS shows it only when incomplete -->
-            <div id="profileNag" class="profile-nag" hidden>
+            <div id="profileNag" class="profile-nag reveal" hidden>
                 <p>Your profile is <strong><span id="nagPercent">0</span>% complete.</strong>
                    Fill it in to get personalized course recommendations.</p>
                 <a href="profile.html">Open profile →</a>
@@ -65,12 +65,12 @@
 
             <!-- Quick stats -->
             <section class="stats-row">
-                <div class="stat-card">
+                <div class="stat-card reveal">
                     <div class="stat-label">Enrolled courses</div>
                     <div class="stat-value" id="statCourses">0</div>
                     <div class="stat-sub">Approved this semester</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card reveal">
                     <div class="stat-label">Profile completion</div>
                     <div class="stat-value"><span id="statProfile">0</span>%</div>
                     <div class="stat-sub">Of optional fields filled</div>
@@ -78,7 +78,7 @@
             </section>
 
             <!-- Current courses -->
-            <section class="dash-section">
+            <section class="dash-section reveal">
                 <div class="dash-section__header">
                     <h3>My current courses</h3>
                     <a href="my-courses.html">See all →</a>
@@ -87,7 +87,7 @@
             </section>
 
             <!-- Recommendations -->
-            <section class="dash-section">
+            <section class="dash-section reveal">
                 <div class="dash-section__header">
                     <h3>Recommended for you</h3>
                     <a href="courses.html">Browse catalogue →</a>
@@ -99,6 +99,7 @@
 
     <script src="assets/js/api.js"></script>
     <script src="assets/js/nav.js"></script>
+    <script src="assets/js/reveal.js"></script>
     <script>
         (async () => {
             // Redirect admins to their own dashboard.
@@ -165,7 +166,7 @@
                     'No new course recommendations right now — either you\'re registered for everything in your department, or they\'re all full.</p>';
             } else {
                 rec.innerHTML = data.recommendations.map(c => `
-                    <article class="course-card">
+                    <article class="course-card reveal">
                         <div class="code">
                             ${escapeHtml(c.course_code)} · ${escapeHtml(c.department)} · ${escapeHtml(c.instructor)}
                         </div>
@@ -175,6 +176,7 @@
                             <a class="btn" href="courses.html">View in catalogue</a>
                         </div>
                     </article>`).join('');
+                window.reveal && window.reveal.scan();
             }
         })();
     </script>
