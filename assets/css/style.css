@@ -995,6 +995,17 @@ button:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0
    WebKit so the pill stays clean. */
 .toolbar input[type="search"]::-webkit-search-cancel-button { display: none; }
 
+/* Inline cluster of related buttons (e.g. Import / Export). Stays a
+   single row even when the parent toolbar stacks vertically on phones
+   — child buttons split the available width evenly via flex: 1. */
+.btn-group {
+    display: flex;
+    gap: 0.5rem;
+}
+.btn-group > .btn,
+.btn-group > button,
+.btn-group > a { flex: 1; text-align: center; }
+
 /* --- Themed dropdown (replaces <select>) ---------------------
    Native <select> only lets you style the closed trigger, not the
    option panel. This component renders a button + listbox we own,

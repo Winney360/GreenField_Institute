@@ -53,8 +53,12 @@ require_admin();
             <button id="addBtn">+ New course</button>
             <!-- Hidden native file input — triggered by the styled button below. -->
             <input type="file" id="importFile" accept=".xml,application/xml,text/xml" hidden />
-            <button id="importBtn" class="btn-secondary">Import XML</button>
-            <a class="btn btn-secondary" href="../api/courses_xml.php" target="_blank">Export XML</a>
+            <!-- Import / Export grouped so they share a row even when the
+                 toolbar stacks vertically on phones. -->
+            <div class="btn-group">
+                <button id="importBtn" class="btn-secondary">Import XML</button>
+                <a class="btn btn-secondary" href="../api/courses_xml.php" target="_blank">Export XML</a>
+            </div>
         </div>
 
         <div id="msg"></div>
