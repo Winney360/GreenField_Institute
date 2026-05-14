@@ -1208,60 +1208,6 @@ table th {
 table tr:last-child td { border-bottom: none; }
 table tbody tr:hover { background: rgba(45, 212, 155, 0.05); }
 
-/* --- Responsive tables (card-stack at phone widths) -----------
-   Opt-in via class="table-stack". On phones the table flattens:
-   thead is hidden, each row becomes a card, and each cell pairs
-   its value with the column label pulled from data-label. */
-@media (max-width: 640px) {
-    .table-stack {
-        background: transparent;
-        box-shadow: none;
-        border-radius: 0;
-        overflow: visible;
-    }
-    .table-stack thead { display: none; }
-    .table-stack tbody,
-    .table-stack tr,
-    .table-stack td { display: block; width: 100%; }
-    .table-stack tr {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        margin-bottom: 0.75rem;
-        padding: 0.4rem 1rem;
-    }
-    .table-stack tbody tr:hover { background: var(--surface); }
-    .table-stack td {
-        border-bottom: 1px solid var(--border);
-        padding: 0.6rem 0;
-        font-size: 0.9rem;
-    }
-    .table-stack tr td:last-child { border-bottom: none; }
-    .table-stack td[data-label] {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0.75rem;
-    }
-    .table-stack td[data-label]::before {
-        content: attr(data-label);
-        font-weight: 600;
-        color: var(--color-primary);
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    /* Action cell: hide if empty, otherwise let buttons span full width. */
-    .table-stack td.cell-action:empty { display: none; }
-    .table-stack td.cell-action { padding-top: 0.75rem; }
-    .table-stack td.cell-action .btn-danger,
-    .table-stack td.cell-action button {
-        width: 100%;
-        padding: 0.55rem;
-    }
-}
-
 /* --- Modal --------------------------------------------------- */
 .modal-backdrop {
     position: fixed; inset: 0; background: rgba(0,0,0,0.55);

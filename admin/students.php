@@ -64,19 +64,21 @@ require_admin();
 
         <div id="msg"></div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Reg number</th>
-                    <th>Status</th>
-                    <th>Added</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="rows"></tbody>
-        </table>
+        <div class="course-list">
+            <table class="course-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Reg number</th>
+                        <th>Status</th>
+                        <th>Added</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
       </div>
     </main>
 
