@@ -127,13 +127,19 @@ body {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     padding: 1rem 1.25rem;
+    /* Three stacked lines, centred — the big number sits visually
+       in the middle between the label and the sub-text. */
+    text-align: center;
 }
 .stat-card .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     font-weight: 600;
+    /* Keep the heading on one line so both cards stay visually identical
+       (e.g. "PROFILE COMPLETION" doesn't wrap to two rows on phones). */
+    white-space: nowrap;
 }
 .stat-card .stat-value {
     font-size: 2rem;
@@ -169,29 +175,54 @@ body {
 }
 .dash-section__header a:hover { text-decoration: underline; }
 
-/* Compact list of current courses */
+/* Wrapper around the current-courses table. Card chrome (background,
+   border, shadow) lives here; the inner table scrolls horizontally
+   when it doesn't fit (common on phones). */
 .course-list {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
-.course-list__item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
+.course-list .course-table {
+    /* Reset the global `table` styles — chrome belongs to the wrapper
+       now, and the table itself should be transparent so the wrapper's
+       background/border/shadow show through correctly. */
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    min-width: 520px;        /* forces horizontal scroll on narrow widths */
+}
+.course-list .course-table th,
+.course-list .course-table td {
+    padding: 0.6rem 0.9rem;
+    white-space: nowrap;
+    font-size: 0.88rem;
     border-bottom: 1px solid var(--border);
+    text-align: left;
 }
-.course-list__item:last-child { border-bottom: none; }
-.course-list__item .code {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-    font-weight: 600;
+.course-list .course-table tbody tr:last-child td { border-bottom: none; }
+.course-list .course-table .cl-dept {
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    font-size: 0.75rem;
 }
-.course-list__item .title { font-size: 0.95rem; color: var(--text); margin-top: 0.1rem; }
+.course-list .course-table .cl-title       { font-weight: 600; color: var(--text); }
+.course-list .course-table .cl-code        { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.5px; font-weight: 600; }
+.course-list .course-table .cl-instructor  { color: var(--text-muted); }
+/* Slim, mint-tinted horizontal scrollbar so the affordance reads as
+   part of the brand on browsers that show it (mostly desktop). */
+.course-list::-webkit-scrollbar          { height: 6px; }
+.course-list::-webkit-scrollbar-thumb    {
+    background: rgba(45, 212, 155, 0.35);
+    border-radius: 4px;
+}
 .course-list__empty {
     padding: 1rem;
     color: var(--text-muted);
@@ -331,12 +362,14 @@ body {
 .capacity-bar__fill.is-warning { background: #b8841e; }
 .capacity-bar__fill.is-full    { background: var(--red-600); }
 
-/* Profile-completion banner — shown only when incomplete */
+/* Profile-completion banner — shown only when incomplete.
+   Stacked layout: the message takes the full width (wraps naturally to
+   ~2 lines), then the action link sits centred on its own row. */
 .profile-nag {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
     background: rgba(45, 212, 155, 0.08);
     border: 1px solid rgba(45, 212, 155, 0.4);
     border-radius: var(--radius);
@@ -349,6 +382,7 @@ body {
     font-weight: 600;
     text-decoration: none;
     white-space: nowrap;
+    text-align: center;
 }
 .profile-nag a:hover { text-decoration: underline; }
 
@@ -1103,6 +1137,43 @@ button:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0
 }
 .course-card .meta span::before { content: "•  "; color: var(--color-primary); }
 .course-card .actions { display: flex; gap: 0.5rem; }
+/* Card footer — single row holding meta info on the left and the
+   action (button or link) on the right. Used by the catalogue cards
+   (lecturer + enrolled + Register) and the dashboard recommendations
+   (enrolled + View in catalogue). */
+.course-card .card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: auto;        /* sticks to the bottom of the flex card */
+    padding-top: 0.6rem;
+    flex-wrap: wrap;         /* lets the button drop below on tiny cards */
+}
+.course-card .card-foot .enrolled {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+/* Bullet-separated meta (instructor • X/Y enrolled). Same look as the
+   old .meta block, but inline so the button can sit on the same row. */
+.course-card .card-foot__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.85rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    min-width: 0;            /* allow shrinking inside the flex row */
+}
+.course-card .card-foot__meta span::before {
+    content: "•  ";
+    color: var(--color-primary);
+}
+.course-card .card-foot .btn,
+.course-card .card-foot button {
+    padding: 0.4rem 0.95rem;
+    font-size: 0.85rem;
+    flex-shrink: 0;          /* never let the button shrink to nothing */
+}
 
 .badge {
     display: inline-block; font-size: 0.7rem; padding: 0.15rem 0.5rem;

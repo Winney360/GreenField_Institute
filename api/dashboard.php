@@ -22,7 +22,7 @@ $profile = $stmt->fetch() ?: [];
 // --- Current enrolments (approved + pending) + status -----------
 $stmt = $pdo->prepare(
     'SELECT c.course_id, c.course_code, c.title, c.instructor,
-            r.status
+            c.department, r.status
        FROM registrations r
        JOIN courses c ON c.course_id = r.course_id
       WHERE r.user_id = ? AND r.status IN ("approved","pending")

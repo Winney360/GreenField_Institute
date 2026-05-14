@@ -120,11 +120,11 @@
                                     : `<span class="badge">${c.available_seats} seats</span>`}
                     </h3>
                     <p>${escapeHtml(c.description || '')}</p>
-                    <div class="meta">
-                        <span>${escapeHtml(c.instructor)}</span>
-                        <span>${c.enrolled}/${c.capacity} enrolled</span>
-                    </div>
-                    <div class="actions">
+                    <div class="card-foot">
+                        <div class="card-foot__meta">
+                            <span>${escapeHtml(c.instructor)}</span>
+                            <span>${c.enrolled}/${c.capacity} enrolled</span>
+                        </div>
                         <button data-id="${c.course_id}" ${c.is_full ? 'disabled' : ''}>
                             ${c.is_full ? 'Full' : 'Register'}
                         </button>

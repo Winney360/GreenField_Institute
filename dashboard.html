@@ -133,14 +133,29 @@
                     '<a href="courses.html" style="color:var(--color-primary);font-weight:600;">Browse the catalogue</a> to get started.' +
                     '</div>';
             } else {
-                cc.innerHTML = data.current_courses.map(c => `
-                    <div class="course-list__item">
-                        <div>
-                            <div class="code">${escapeHtml(c.course_code)}</div>
-                            <div class="title">${escapeHtml(c.title)} · ${escapeHtml(c.instructor)}</div>
-                        </div>
-                        <span class="status-pill status-${escapeHtml(c.status)}">${escapeHtml(c.status)}</span>
-                    </div>`).join('');
+                // Table with column headings; the wrapper scrolls horizontally
+                // when the columns don't all fit (typical on phone widths).
+                const rows = data.current_courses.map(c => `
+                    <tr>
+                        <td class="cl-dept">${escapeHtml(c.department)}</td>
+                        <td class="cl-title">${escapeHtml(c.title)}</td>
+                        <td class="cl-code">${escapeHtml(c.course_code)}</td>
+                        <td class="cl-instructor">${escapeHtml(c.instructor)}</td>
+                        <td><span class="status-pill status-${escapeHtml(c.status)}">${escapeHtml(c.status)}</span></td>
+                    </tr>`).join('');
+                cc.innerHTML = `
+                    <table class="course-table">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Course</th>
+                                <th>Code</th>
+                                <th>Lecturer</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>`;
             }
 
             // Recommendations
@@ -151,13 +166,12 @@
             } else {
                 rec.innerHTML = data.recommendations.map(c => `
                     <article class="course-card">
-                        <div class="code">${escapeHtml(c.course_code)} · ${escapeHtml(c.department)}</div>
-                        <h3>${escapeHtml(c.title)}</h3>
-                        <div class="meta">
-                            <span>${escapeHtml(c.instructor)}</span>
-                            <span>${c.enrolled}/${c.capacity} enrolled</span>
+                        <div class="code">
+                            ${escapeHtml(c.course_code)} · ${escapeHtml(c.department)} · ${escapeHtml(c.instructor)}
                         </div>
-                        <div class="actions">
+                        <h3>${escapeHtml(c.title)}</h3>
+                        <div class="card-foot">
+                            <span class="enrolled">${c.enrolled}/${c.capacity} enrolled</span>
                             <a class="btn" href="courses.html">View in catalogue</a>
                         </div>
                     </article>`).join('');
