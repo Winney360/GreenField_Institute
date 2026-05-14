@@ -53,7 +53,7 @@ require_admin();
 
     <main class="main">
       <div class="container">
-        <h2>All registrations</h2>
+        <h2>All Course Registrations</h2>
         <div class="toolbar">
             <input type="search" id="filter" placeholder="Filter by student name, email, or course…" />
         </div>
@@ -103,21 +103,30 @@ require_admin();
                 rowsEl.innerHTML = '<tr><td colspan="6" style="color:var(--text-muted)">No registrations match.</td></tr>';
                 return;
             }
-            rowsEl.innerHTML = list.map(r => `
-                <tr>
-                    <td>${escapeHtml(r.full_name)}</td>
-                    <td>${escapeHtml(r.email)}</td>
-                    <td>${escapeHtml(r.course_code)} — ${escapeHtml(r.title)}</td>
-                    <td><span class="status-pill status-${escapeHtml(r.status)}">${escapeHtml(r.status)}</span></td>
-                    <td>${new Date(r.registered_at).toLocaleString()}</td>
-                    <td>
-                        ${r.status === 'pending' ? `
-                            <button data-act="approve" data-id="${r.registration_id}">Approve</button>
-                            <button class="btn-danger" data-act="reject" data-id="${r.registration_id}">Reject</button>
-                        ` : '—'}
-                    </td>
-                </tr>
-            `).join('');
+            rowsEl.innerHTML = list.map(r => {
+                // Pending → admin decides (approve / reject).
+                // Approved or rejected → admin can still drop (fix a mistaken
+                //   registration). Already-dropped rows are terminal.
+                let actions;
+                if (r.status === 'pending') {
+                    actions = `
+                        <button data-act="approve" data-id="${r.registration_id}">Approve</button>
+                        <button class="btn-danger" data-act="reject" data-id="${r.registration_id}">Reject</button>`;
+                } else if (r.status === 'dropped') {
+                    actions = '—';
+                } else {
+                    actions = `<button class="btn-danger" data-act="drop" data-id="${r.registration_id}">Drop</button>`;
+                }
+                return `
+                    <tr>
+                        <td>${escapeHtml(r.full_name)}</td>
+                        <td>${escapeHtml(r.email)}</td>
+                        <td>${escapeHtml(r.course_code)} — ${escapeHtml(r.title)}</td>
+                        <td><span class="status-pill status-${escapeHtml(r.status)}">${escapeHtml(r.status)}</span></td>
+                        <td>${new Date(r.registered_at).toLocaleString()}</td>
+                        <td>${actions}</td>
+                    </tr>`;
+            }).join('');
 
             rowsEl.querySelectorAll('button[data-id]').forEach(b => {
                 b.addEventListener('click', () => act(b.dataset.act, b.dataset.id));
@@ -125,14 +134,13 @@ require_admin();
         }
 
         async function act(action, regId) {
-            const verb = action === 'approve' ? 'approve' : 'reject';
-            if (!confirm(`Are you sure you want to ${verb} this registration?`)) return;
+            if (!confirm(`Are you sure you want to ${action} this registration?`)) return;
             const res = await api.post('../api/admin_registrations.php', {
                 action,
                 registration_id: Number(regId),
             });
             if (res.ok) { flash('msg', `Registration ${res.status}.`, 'success'); load(); }
-            else        { flash('msg', res.error || `${verb} failed.`, 'error'); }
+            else        { flash('msg', res.error || `${action} failed.`, 'error'); }
         }
 
         load();

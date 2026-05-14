@@ -14,19 +14,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $b['action']         ?? '';
     $regId  = (int)($b['registration_id'] ?? 0);
 
-    if ($regId <= 0 || !in_array($action, ['approve', 'reject'], true)) {
+    if ($regId <= 0 || !in_array($action, ['approve', 'reject', 'drop'], true)) {
         json_response(['ok' => false, 'error' => 'Bad request.'], 400);
     }
 
-    $newStatus = $action === 'approve' ? 'approved' : 'rejected';
-    $stmt = $pdo->prepare(
-        'UPDATE registrations SET status = ?
-          WHERE registration_id = ? AND status = "pending"'
-    );
-    $stmt->execute([$newStatus, $regId]);
+    if ($action === 'drop') {
+        // Admin drop — lets us back out a registration even after it's been
+        // approved or rejected (e.g. student registered for the wrong
+        // course by mistake). Only blocked if it's already dropped.
+        $newStatus = 'dropped';
+        $stmt = $pdo->prepare(
+            'UPDATE registrations SET status = "dropped"
+              WHERE registration_id = ? AND status <> "dropped"'
+        );
+        $stmt->execute([$regId]);
+        $errorMsg = 'That registration is already dropped.';
+    } else {
+        // Approve / reject — only valid while the registration is pending.
+        $newStatus = $action === 'approve' ? 'approved' : 'rejected';
+        $stmt = $pdo->prepare(
+            'UPDATE registrations SET status = ?
+              WHERE registration_id = ? AND status = "pending"'
+        );
+        $stmt->execute([$newStatus, $regId]);
+        $errorMsg = 'That registration is no longer pending.';
+    }
 
     if ($stmt->rowCount() === 0) {
-        json_response(['ok' => false, 'error' => 'That registration is no longer pending.'], 409);
+        json_response(['ok' => false, 'error' => $errorMsg], 409);
     }
     json_response(['ok' => true, 'status' => $newStatus]);
 }
