@@ -15,7 +15,13 @@ require_admin();
         <button class="navbar__hamburger" type="button" aria-label="Open menu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
-        <h1><img class="navbar__logo" src="../assets/img/logo.png" alt="" />GREENFIELD INSTITUTE <span class="admin-label">ADMIN PANEL</span></h1>
+        <h1>
+            <img class="navbar__logo" src="../assets/img/logo.png" alt="" />
+            <span class="navbar__brand">
+                <span class="navbar__title">GREENFIELD INSTITUTE</span>
+                <span class="admin-label">ADMIN PANEL</span>
+            </span>
+        </h1>
     </header>
 
     <aside class="sidebar">
@@ -53,15 +59,17 @@ require_admin();
         </div>
 
         <div id="msg"></div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Student</th><th>Email</th><th>Course</th>
-                    <th>Status</th><th>Registered</th><th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="rows"></tbody>
-        </table>
+        <div class="course-list">
+            <table class="course-table">
+                <thead>
+                    <tr>
+                        <th>Student</th><th>Email</th><th>Course</th>
+                        <th>Status</th><th>Registered</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
       </div>
     </main>
 
