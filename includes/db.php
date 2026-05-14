@@ -16,6 +16,10 @@ function db(): PDO {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
         ]);
+        // Force this connection to UTC so CURRENT_TIMESTAMP / NOW() write UTC
+        // values regardless of what the MySQL server's system timezone is.
+        // Pairs with the client-side timeAgo() that parses these as UTC.
+        $pdo->exec("SET time_zone = '+00:00'");
     } catch (PDOException $e) {
         http_response_code(500);
         exit('Database connection failed: ' . htmlspecialchars($e->getMessage()));

@@ -113,15 +113,21 @@ $firstName = explode(' ', $admin['full_name'])[0];
     <script src="../assets/js/reveal.js"></script>
     <script>
         function timeAgo(iso) {
+            // MySQL DATETIME comes back as "YYYY-MM-DD HH:MM:SS" with no
+            // timezone marker. The DB connection is forced to UTC (see
+            // includes/db.php), so we tag the string with 'T' + 'Z' before
+            // parsing — otherwise the browser interprets it as local time
+            // and the "X ago" math is off by the user's UTC offset.
+            const utcIso = iso.replace(' ', 'T') + 'Z';
             const now = Date.now();
-            const then = new Date(iso).getTime();
+            const then = new Date(utcIso).getTime();
             const sec = Math.round((now - then) / 1000);
             if (sec < 60)    return 'just now';
             if (sec < 3600)  return Math.floor(sec / 60)   + 'm ago';
             if (sec < 86400) return Math.floor(sec / 3600) + 'h ago';
             const days = Math.floor(sec / 86400);
             if (days < 30) return days + 'd ago';
-            return new Date(iso).toLocaleDateString();
+            return new Date(utcIso).toLocaleDateString();
         }
 
         (async () => {
