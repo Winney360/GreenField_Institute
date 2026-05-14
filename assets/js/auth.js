@@ -78,7 +78,7 @@
         const btn = form.querySelector('button[type="submit"]');
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            btn.disabled = true; btn.textContent = 'Activating…';
+            btn.disabled = true; btn.textContent = 'Signing up…';
             const res = await api.post('api/register.php', {
                 email:               form.email.value.trim(),
                 registration_number: form.registration_number.value.trim(),
@@ -87,8 +87,8 @@
             if (res.ok) {
                 window.location.href = res.redirect;
             } else {
-                flash('msg', res.error || 'Activation failed.', 'error');
-                btn.disabled = false; btn.textContent = 'Activate';
+                flash('msg', res.error || 'Sign up failed.', 'error');
+                btn.disabled = false; btn.textContent = 'Sign up';
             }
         });
     }

@@ -51,7 +51,7 @@ browser builds the DOM from it.
 | `my-courses.html` | student | Registered units in a horizontally-scrollable table with status pills and a Drop action. |
 | `profile.html`, `settings.html` | student | Edit optional profile fields; change password. |
 | `admin/dashboard.php` | admin | Action-items strip (pending registrations, capacity alerts), totals, activity feed. |
-| `admin/students.php` | admin | Pre-register new students and view activation status. |
+| `admin/students.php` | admin | Pre-register new students and view sign-up status. |
 | `admin/manage_courses.php` | admin | Course CRUD with a modal editor, XML import (file upload), and dated XML export. |
 | `admin/registrations.php` | admin | Approve / reject pending registrations and drop already-processed ones. |
 
@@ -113,7 +113,7 @@ single fetch call and updates a small region of the DOM.
 
 | Endpoint | Purpose |
 |---|---|
-| `api/register.php` | Activates a pre-registered student account (matches email + reg-number, writes the bcrypt password hash). |
+| `api/register.php` | Completes sign-up for a pre-registered student (matches email + reg-number, writes the bcrypt password hash). |
 | `api/login.php` | Authenticates email + password, regenerates session ID on success. |
 | `api/logout.php`, `api/me.php` | Session teardown and current-user lookup. |
 | `api/dashboard.php` | Single round-trip that returns stats, current courses, recommendations, and the profile-completion percentage. |
@@ -149,7 +149,7 @@ Three tables (defined in [sql/greenfield.sql](sql/greenfield.sql)):
 
 | Table          | Purpose |
 |----------------|---------|
-| `users`        | Students and administrators in a single table with a `role` column. `password_hash` is nullable — admins create student stubs without a password and the student fills it in when activating. Five optional profile fields (`registration_number`, `year_of_birth`, `gender`, `department`, `programme`) are added/edited over time. |
+| `users`        | Students and administrators in a single table with a `role` column. `password_hash` is nullable — admins create student stubs without a password and the student fills it in at sign up. Five optional profile fields (`registration_number`, `year_of_birth`, `gender`, `department`, `programme`) are added/edited over time. |
 | `courses`      | Course catalogue: code, title, description, instructor, capacity, department. |
 | `registrations`| Many-to-many link between users and courses. Status flow: **pending → approved / rejected → dropped**. A composite `UNIQUE (user_id, course_id)` index enforces "no duplicate registration" at the database level. Foreign keys with `ON DELETE CASCADE` keep the data consistent if a user or course is removed. Re-registering after a drop reuses the same row by flipping the status back to pending. |
 
@@ -211,11 +211,11 @@ is made in the browser.**
 
 ### 5. Additional Features Implemented
 
-- **Pre-registration & activation.** Admins add admitted students
+- **Pre-registration & sign up.** Admins add admitted students
   (name + email + registration number) ahead of time; the student
-  then activates the account by entering their email,
+  then signs up by entering their email,
   registration number, and a chosen password on the combined login/signup
-  page. The activation flow writes the bcrypt password hash and lets
+  page. The sign-up flow writes the bcrypt password hash and lets
   the student log in immediately.
 - **Approval workflow.** Every student registration enters as `pending`
   and waits for an admin decision (`approved` / `rejected`).
@@ -239,7 +239,7 @@ is made in the browser.**
   courses the student has not yet registered for, in their department
   if known, that still have seats.
 - **Enhanced admin dashboard.** Action-items strip (pending
-  registrations, students still to activate), totals (students,
+  registrations, students still to sign up), totals (students,
   courses, active registrations), an activity feed of recent events,
   and capacity-alert cards for courses that are full or filling up.
 - **Secure password handling.** bcrypt via `password_hash` /

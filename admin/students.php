@@ -55,7 +55,7 @@ require_admin();
       <div class="container">
         <h2>Students</h2>
         <p style="color:var(--text-muted); margin-top:0;">
-            Add admitted students so they can activate their accounts using their school email and registration number.
+            Add admitted students so they can sign up using their school email and registration number.
         </p>
 
         <!-- Add-student form -->
@@ -104,7 +104,7 @@ require_admin();
             }
             rowsEl.innerHTML = res.students.map(s => {
                 const statusClass = Number(s.activated) === 1 ? 'status-approved' : 'status-pending';
-                const statusText  = Number(s.activated) === 1 ? 'Activated' : 'Pending activation';
+                const statusText  = Number(s.activated) === 1 ? 'Signed up' : 'Pending sign up';
                 return `
                     <tr>
                         <td>${escapeHtml(s.full_name)}</td>
@@ -133,7 +133,7 @@ require_admin();
                 registration_number: document.getElementById('newRegNum').value.trim(),
             });
             if (res.ok) {
-                flash('msg', 'Student added. They can now activate their account.', 'success');
+                flash('msg', 'Student added. They can now sign up.', 'success');
                 form.reset();
                 load();
             } else {

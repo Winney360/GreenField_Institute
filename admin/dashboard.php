@@ -73,7 +73,7 @@ $firstName = explode(' ', $admin['full_name'])[0];
                 <div class="stat-card">
                     <div class="stat-label">Total students</div>
                     <div class="stat-value" id="statTotalStudents">0</div>
-                    <div class="stat-sub"><span id="statActivated">0</span> activated</div>
+                    <div class="stat-sub"><span id="statActivated">0</span> signed up</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Courses</div>
@@ -145,7 +145,7 @@ $firstName = explode(' ', $admin['full_name'])[0];
                         <a href="students.php" class="action-card ${ai.unactivated_students > 0 ? 'has-pending' : ''}">
                             <div class="badge-count">${ai.unactivated_students}</div>
                             <div class="action-card__body">
-                                <div class="action-card__label">Students awaiting activation</div>
+                                <div class="action-card__label">Students awaiting sign up</div>
                                 <div class="action-card__hint">Admitted but haven't signed up yet</div>
                             </div>
                         </a>

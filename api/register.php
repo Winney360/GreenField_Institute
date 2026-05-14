@@ -51,7 +51,7 @@ if (!$row) {
     json_response(['ok' => false, 'error' => "The email and registration number don't match an admitted student record."], 401);
 }
 if (!empty($row['password_hash'])) {
-    json_response(['ok' => false, 'error' => 'That account is already activated. Please sign in instead.'], 409);
+    json_response(['ok' => false, 'error' => 'That account is already signed up. Please log in instead.'], 409);
 }
 
 // --- Activate: set the password, start their session -----------------
