@@ -8,28 +8,13 @@ HTML/CSS/JS front-end · PHP business logic · MySQL database · XML import/expo
 - **Live site:** <https://greenfield-institute.infinityfreeapp.com/>
 - **Video walkthrough:** <https://youtu.be/8QvgyfAVpz8>
 
-> # ⚠️ IMPORTANT — OPEN THE LIVE SITE IN MICROSOFT EDGE ⚠️
->
-> **Do NOT use Google Chrome.** Chrome's Safe Browsing service has flagged
-> the shared InfinityFree hosting IP (`185.27.134.143`) because of unrelated
-> phishing activity on other free-tier accounts that share the same IP.
-> The flag is inherited by every domain pointing to that IP — including
-> brand-new ones like ours.
->
-> **This project itself contains no malware, phishing, or harmful content.**
-> It is a course-registration demo built for an academic case study. The
-> SSL certificate is valid (issued by Let's Encrypt) and the site is fully
-> functional. A review request has already been submitted to Google.
->
-> ✅ **Microsoft Edge** — opens the site normally with a valid SSL padlock.
->    Use this for marking.
->
-> ✅ **Chrome Incognito Window** (Ctrl + Shift + N) — also works on a fresh
->    machine. Use this if Edge is unavailable.
->
-> ❌ **Regular Chrome window** — will show a red "Dangerous site" page.
->    This is a Chrome-specific cosmetic issue and does not affect any
->    functionality of the system.
+> **⚠️ Please open the live site in Microsoft Edge.**
+> Google Chrome may show a "Dangerous site" warning because the shared
+> InfinityFree hosting IP has been flagged due to unrelated phishing
+> activity on other free-tier accounts that share the same IP. The
+> project itself is clean, the SSL certificate is valid (Let's Encrypt),
+> and a review request has been submitted to Google. Microsoft Edge
+> loads the site normally with a valid SSL padlock.
 
 **Quick login for marking:**
 
