@@ -3,6 +3,25 @@
 A three-tier web application for the Greenfield Institute case study:
 HTML/CSS/JS front-end · PHP business logic · MySQL database · XML import/export.
 
+## Live Demo
+
+- **Live site:** <https://greenfield-institute.infinityfreeapp.com/>
+- **Video walkthrough:** <https://youtu.be/8QvgyfAVpz8>
+
+> **⚠️ Please open the live site in Microsoft Edge.**
+> Google Chrome may show a Safe Browsing warning because the shared
+> InfinityFree hosting IP has been flagged due to unrelated free-tier
+> neighbours. The site itself is clean — a review request has been
+> submitted to Google. Edge 
+> loads the site normally with a valid SSL padlock.
+
+**Quick login for marking:**
+
+| Role          | Email                                | Password     |
+|---------------|--------------------------------------|--------------|
+| Administrator | `admin@greenfield.edu`               | `password123`|
+| Student       | `test@student.greenfield.edu`        | `testing123` |
+
 ## Quick start
 
 1. **Database** — start MySQL, then run:
@@ -25,15 +44,14 @@ HTML/CSS/JS front-end · PHP business logic · MySQL database · XML import/expo
 
 4. Open <http://localhost:8000/>.
 
-## Default accounts
+## Default accounts (local install)
 
-| Role          | Email                              | Password      |
-|---------------|------------------------------------|---------------|
-| Administrator | `admin@greenfield.edu`             | `password123` |
-| Student       | `alice@student.greenfield.edu`     | `password123` |
-| Student       | `brian@student.greenfield.edu`     | `password123` |
+| Role          | Email                                | Password      |
+|---------------|--------------------------------------|---------------|
+| Administrator | `admin@greenfield.edu`               | `password123` |
+| Student       | `test@student.greenfield.edu`        | `testing123`  |
 
-These accounts are seeded by `sql/greenfield.sql` with working bcrypt hashes — no extra setup step is needed.
+These accounts are seeded with working bcrypt hashes — no extra setup step needed. The same credentials apply to the live deployment.
 
 ## Adding another admin
 
