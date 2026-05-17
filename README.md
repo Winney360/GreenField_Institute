@@ -12,15 +12,15 @@ HTML/CSS/JS front-end · PHP business logic · MySQL database · XML import/expo
 > Google Chrome may show a Safe Browsing warning because the shared
 > InfinityFree hosting IP has been flagged due to unrelated free-tier
 > neighbours. The site itself is clean — a review request has been
-> submitted to Google. Edge 
+> submitted to Google. Edge
 > loads the site normally with a valid SSL padlock.
 
 **Quick login for marking:**
 
-| Role          | Email                                | Password     |
-|---------------|--------------------------------------|--------------|
-| Administrator | `admin@greenfield.edu`               | `password123`|
-| Student       | `test@student.greenfield.edu`        | `testing123` |
+| Role          | Email                         | Password      |
+| ------------- | ----------------------------- | ------------- |
+| Administrator | `admin@greenfield.edu`        | `password123` |
+| Student       | `test@student.greenfield.edu` | `testing123`  |
 
 ## Quick start
 
@@ -46,10 +46,10 @@ HTML/CSS/JS front-end · PHP business logic · MySQL database · XML import/expo
 
 ## Default accounts (local install)
 
-| Role          | Email                                | Password      |
-|---------------|--------------------------------------|---------------|
-| Administrator | `admin@greenfield.edu`               | `password123` |
-| Student       | `test@student.greenfield.edu`        | `testing123`  |
+| Role          | Email                         | Password      |
+| ------------- | ----------------------------- | ------------- |
+| Administrator | `admin@greenfield.edu`        | `password123` |
+| Student       | `test@student.greenfield.edu` | `testing123`  |
 
 These accounts are seeded with working bcrypt hashes — no extra setup step needed. The same credentials apply to the live deployment.
 
