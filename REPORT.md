@@ -278,8 +278,7 @@ The project runs on a standard XAMPP install (Windows, macOS, or Linux).
 | Role | Email | Password |
 |---|---|---|
 | Administrator | `admin@greenfield.edu` | `password123` |
-| Student | `alice@student.greenfield.edu` | `password123` |
-| Student | `brian@student.greenfield.edu` | `password123` |
+| Student (test account) | `test@student.greenfield.edu` | `testing123` |
 
 A production deployment is also live on InfinityFree shared hosting;
 the same SQL file is imported into the hosted MySQL database, and

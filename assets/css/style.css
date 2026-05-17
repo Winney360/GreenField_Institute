@@ -490,13 +490,21 @@ body {
 /* Hamburger uses the same <button> element as form buttons, so the
    global button hover (lift + shadow) would otherwise apply. Override
    it: on hover/active just shift the colour to the darker brand mint,
-   no movement, no shadow. */
-.navbar__hamburger:hover,
-.navbar__hamburger:active {
-    transform: none;
+   no movement, no shadow. Selector needs :not(:disabled) so it beats
+   the global button:not(:disabled):hover rule's specificity.
+
+   IMPORTANT: the mobile media query (.has-sidebar .navbar__hamburger)
+   uses transform: translateY(-50%) to vertically centre the button
+   inside the navbar. We must preserve that exact transform here —
+   setting "transform: none" on hover would reset the centring and
+   the button would jump up to the top of the bar. */
+.navbar__hamburger:not(:disabled):hover,
+.navbar__hamburger:not(:disabled):active {
+    transform: translateY(-50%);
     box-shadow: none;
-    background: transparent;
+    background: rgba(45, 212, 155, 0.15);
     color: var(--color-primary-dark);
+    border-radius: 6px;
 }
 
 /* Click-to-close overlay behind the open sidebar. Element is injected
