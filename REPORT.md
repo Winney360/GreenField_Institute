@@ -1,6 +1,16 @@
 # Greenfield Institute — Course Registration System
 ## Project Report
 
+### Group 11 — Members
+
+| Name | Registration Number |
+|---|---|
+| Kimathi Nkatha Winfred | SCM211-0370/2024 |
+| Erick Mwendwa Ndeto    | SCM211-0367/2024 |
+| Lewis Gitonga          | SCM211-0363/2024 |
+| Allan Kimani           | SCM211-0316/2024 |
+| Mary Mwangi            | SCM211-0299/2024 |
+
 ### 1. Problem Statement
 Greenfield Institute previously processed course registrations through emails and
 manually maintained spreadsheets. The result was duplicate registrations, stale
