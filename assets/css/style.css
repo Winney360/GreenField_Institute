@@ -487,6 +487,17 @@ body {
     justify-content: center;
 }
 .navbar__hamburger svg { width: 26px; height: 26px; }
+/* Hamburger uses the same <button> element as form buttons, so the
+   global button hover (lift + shadow) would otherwise apply. Override
+   it: on hover/active just shift the colour to the darker brand mint,
+   no movement, no shadow. */
+.navbar__hamburger:hover,
+.navbar__hamburger:active {
+    transform: none;
+    box-shadow: none;
+    background: transparent;
+    color: var(--color-primary-dark);
+}
 
 /* Click-to-close overlay behind the open sidebar. Element is injected
    dynamically by nav.js; lives in the DOM but hidden until needed.
