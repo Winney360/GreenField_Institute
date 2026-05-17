@@ -8,7 +8,7 @@ HTML/CSS/JS front-end · PHP business logic · MySQL database · XML import/expo
 - **Live site:** <https://greenfield-institute.infinityfreeapp.com/>
 - **Video walkthrough:** <https://youtu.be/8QvgyfAVpz8>
 
-> **⚠️ Please open the live site in Microsoft Edge.**
+> **⚠️ Please open the live site in Microsoft Edge.⚠️ **
 > Google Chrome may show a "Dangerous site" warning because the shared
 > InfinityFree hosting IP has been flagged due to unrelated phishing
 > activity on other free-tier accounts that share the same IP. The
