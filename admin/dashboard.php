@@ -1,8 +1,10 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 $admin = require_admin();
-// Greeting uses just the first word of the name (cleaner heading).
-$firstName = explode(' ', $admin['full_name'])[0];
+// Greeting always shows "Admin" rather than the stored full_name. The
+// seeded admin's name is "System Administrator", so the old first-word
+// logic produced "Welcome back, System" — which doesn't read naturally.
+$firstName = 'Admin';
 ?>
 <!DOCTYPE html>
 <html lang="en">
