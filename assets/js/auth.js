@@ -58,10 +58,16 @@
         const btn = form.querySelector('button[type="submit"]');
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
+            const emailEl = document.getElementById('loginEmail');
+            const passEl  = document.getElementById('loginPassword');
+            if (!emailEl || !passEl) {
+                flash('msg', 'Login form is missing a field. Please refresh and try again.', 'error');
+                return;
+            }
             btn.disabled = true; btn.textContent = 'Signing in…';
             const res = await api.post('api/login.php', {
-                email: form.email.value.trim(),
-                password: form.password.value
+                email:    (emailEl.value || '').trim(),
+                password: passEl.value || ''
             });
             if (res.ok) {
                 window.location.href = res.redirect;
@@ -78,11 +84,21 @@
         const btn = form.querySelector('button[type="submit"]');
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
+            // Look up fields explicitly by id so the code doesn't depend on
+            // form.{name} property access, which can break if the input's
+            // name attribute is missing, renamed, or shadowed.
+            const emailEl  = document.getElementById('signupEmail');
+            const regnumEl = document.getElementById('signupRegNum');
+            const passEl   = document.getElementById('signupPassword');
+            if (!emailEl || !regnumEl || !passEl) {
+                flash('msg', 'Sign-up form is missing a field. Please refresh and try again.', 'error');
+                return;
+            }
             btn.disabled = true; btn.textContent = 'Signing up…';
             const res = await api.post('api/register.php', {
-                email:               form.email.value.trim(),
-                registration_number: form.registration_number.value.trim(),
-                password:            form.password.value
+                email:               (emailEl.value || '').trim(),
+                registration_number: (regnumEl.value || '').trim(),
+                password:            passEl.value || ''
             });
             if (res.ok) {
                 window.location.href = res.redirect;
